@@ -1,0 +1,1060 @@
+# 02_Data_Model_and_Interface.md
+
+# AI-Friendly Software Design Document (AISDD)
+
+# Part 2
+
+# Data Model and Interface
+
+Version: v1.0
+
+Last Update: 2026-08-03
+
+---
+
+# 2.1 Data Model Overview
+
+`Face_Pipeline_V2` 采用：
+
+统一数据模型驱动的 Pipeline Architecture。
+
+---
+
+整个 Pipeline 中：
+
+每一个 Stage：
+
+必须明确：
+
+- Input Data
+- Processing Purpose
+- Output Data
+- Data Structure
+
+---
+
+数据模型设计目标：
+
+- 明确每个Stage输入输出关系
+- 保证Stage之间接口一致
+- 保证Video、Face、FLAME、Gaze、Audio时间同步
+- 保证Audio经过音画同步修正后再进入Feature Extraction
+- 保证数据生命周期可追踪
+- 支持AI Coding Agent自动生成代码
+
+---
+
+# 2.2 Global Data Flow Architecture
+
+完整数据流：
+
+`Raw Video`
+
+↓
+
+`VideoInfo`
+
+↓
+
+`Standardized VideoInfo`
+
+↓
+
+`SceneInfo`
+
++
+
+`CoarseFaceInfo`
+
++
+
+`SceneFilterResult`
+
+↓
+
+`ClipInfo`
+
+↓
+
+`FrameInfo`
+
+↓
+
+`FaceInfo`
+
+↓
+
+`Quality Metrics`
+
+↓
+
+`LandmarkInfo`
+
+↓
+
+`AlignmentInfo`
+
+↓
+
+`FLAMEFeature`
+
++
+
+`GazeFeature`
+
++
+
+`AudioFeature`
+
+↓
+
+`TrainingSample`
+
+---
+
+Audio独立处理流程：
+
+`Raw Audio`
+
+↓
+
+`AudioInfo`
+
+↓
+
+`Stage 7 A/V Sync Detection`
+
+↓
+
+`CorrectedAudioInfo`
+
+↓
+
+`Stage 14 Audio Feature Extraction`
+
+↓
+
+`AudioFeature`
+
+---
+
+# 2.3 Stage Input / Output Interface Overview
+
+| Stage | Input | Processing | Output |
+|---|---|---|---|
+| Stage 0 | Raw Video | 视频完整性检测 | VideoInfo |
+| Stage 1 | VideoInfo | 视频音频标准化 | Standardized VideoInfo + AudioInfo |
+| Stage 2 | Standardized VideoInfo | Scene检测 | SceneInfo |
+| Stage 3 | SceneInfo | 人脸快速筛选 + Per-Sample Metadata | SceneInfo (with CoarseFaceInfo + SceneFilterResult) |
+| Stage 4 | SceneInfo (filtered) | Sliding Window切片 | ClipInfo |
+| Stage 5 | ClipInfo | 每帧人脸检测与裁剪 | FrameInfo + FaceInfo |
+| Stage 5.1 | FaceInfo | 人脸跟踪 | TrackingInfo (FaceSequence + track_id) |
+| Stage 5.2 | TrackingInfo | 单人脸身份硬过滤 (Hard Filter) | Filtered FaceSequence List（拒绝的被丢弃） |
+| Stage 5.3 | post-5.2 FaceSequence List | 时序稳定性硬过滤 (Hard Filter) | Stabilized FaceSequence List（拒绝的被丢弃） |
+| Stage 6 | FaceInfo | 姿态估计 | PoseInfo |
+| Stage 7 | FaceSequence + AudioInfo + ClipInfo | 音画同步检测 (SyncNet) | AVSyncInfo |
+| Stage 7.1 | AVSyncInfo + StandardizedVideoInfo | 音画同步校正 (Audio Alignment) | AVAlignmentInfo |
+| Stage 8 | Face Crop | 人脸质量评估 | FaceQualityInfo |
+| Stage 9 | Quality Metrics | 多指标融合过滤 | QualityFusionInfo |
+| Stage 9.1 | Quality Metrics | 质量评分排序 | QualityScoreInfo |
+| Stage 10 | Face Crop | 高精度关键点提取 | LandmarkInfo |
+| Stage 11 | LandmarkInfo | 人脸对齐 | AlignmentInfo |
+| Stage 11.5 | AlignmentInfo | 人脸有效性检查 | FaceValidityInfo |
+| Stage 12 | AlignmentInfo | FLAME参数提取 | FLAMEFeature |
+| Stage 13 | AlignmentInfo | Gaze参数提取 | GazeFeature |
+| Stage 14 | AVAlignmentInfo (corrected audio) | 音频Embedding提取 | AudioFeature |
+| Stage 15 | Pipeline Result | 质量统计 | StatisticsInfo |
+| Stage 16 | Video Metadata | 数据标注 | AnnotationInfo |
+| Stage 17 | FLAME + Gaze + Audio + Metadata | 参数对齐融合 | TrainingSample |
+
+---
+
+> **Gating 语义**：Stage 5.2 / Stage 5.3 的 `identity_result` / `stability_result` 不只是 metadata——
+> `passed=False` 的 sequence 会被丢弃，不进入后续 Stage 6 / 7 / 8。
+
+# 2.4 Data Model Design Principles
+
+# 2.4.1 Immutable Data Object
+
+所有核心数据：
+
+必须采用不可变结构。
+
+推荐：
+
+`@dataclass(frozen=True, slots=True)`
+
+---
+
+规则：
+
+- 输入对象禁止直接修改
+- Stage必须生成新的输出对象
+- 保证数据状态可追踪
+
+---
+
+# 2.4.2 Timestamp Alignment
+
+所有多模态数据：
+
+必须基于统一时间轴。
+
+---
+
+核心字段：
+
+| Field Name | 中文名称 | Type | Description |
+|---|---|---|---|
+| frame_index | 视频帧编号 | int | 视频中的唯一帧索引 |
+| timestamp | 时间戳 | float | 数据对应时间位置 |
+| fps | 视频帧率 | float | 视频时间基准 |
+
+---
+
+最终要求：
+
+| Data | Alignment Rule |
+|---|---|
+| Face Image | 与frame_index一致 |
+| FLAME Parameter | 与frame_index一致 |
+| Gaze Parameter | 与frame_index一致 |
+| Audio Feature | 与Corrected Audio timestamp一致 |
+
+---
+
+# 2.4.3 Audio Alignment Rule
+
+Audio处理必须遵循：
+
+`Raw Audio`
+
+禁止直接进入：
+
+`Stage 14 Audio Feature Extraction`
+
+---
+
+正确流程：
+
+`Raw Audio`
+
+↓
+
+`Stage 7 SyncNet`
+
+↓
+
+`Audio Offset Correction`
+
+↓
+
+`Corrected Audio`
+
+↓
+
+`HuBERT`
+
+↓
+
+`Audio Feature`
+
+---
+
+原因：
+
+保证：
+
+Audio Feature
+
+与：
+
+Video Frame
+
+时间一致。
+
+---
+
+# 2.4.4 Data Traceability
+
+所有最终训练样本：
+
+必须能够追踪：
+
+`TrainingSample`
+
+到：
+
+`Raw Video`
+
+---
+
+追踪链：
+
+| Level | Identifier |
+|---|---|
+| Video | video_id |
+| Scene | scene_id |
+| Clip | clip_id |
+| Frame | frame_index |
+| Sample | sample_id |
+
+---
+
+# 2.4.5 Stage Processing Metadata Principle
+
+所有Stage：
+
+必须在处理每个数据样本时：
+
+生成Per-Sample处理Metadata。
+
+---
+
+禁止：
+
+任何Stage内部：
+
+生成聚合统计报告。
+
+---
+
+Stage职责：
+
+| Stage | Metadata Output |
+|---|---|
+| Stage 3 | CoarseFaceInfo + SceneFilterResult |
+| Stage 5 | FaceInfo (per-frame) |
+| Stage 6 | PoseInfo (per-frame) |
+| Stage 8 | FaceQualityInfo (per-frame) |
+| Stage 15 | 收集所有Metadata → 聚合统计 |
+
+---
+
+Stage 15：
+
+负责：
+
+- 跨Stage数据统计
+- 过滤比例分析
+- 时长损耗分析
+- Pipeline质量报告
+
+---
+
+设计原则：
+
+1. Stage = 业务处理 + Metadata生成
+2. Stage ≠ 统计报告
+3. Stage 15 = 唯一统计聚合入口
+
+---
+
+# 2.5 Core Video Data Models
+
+# 2.5.1 VideoInfo
+
+## Purpose
+
+保存视频基础信息。
+
+Generated By:
+
+`Stage 0 Video Integrity Check`
+
+---
+
+Input:
+
+`Raw Video`
+
+---
+
+Output:
+
+`VideoInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| video_id | 视频唯一ID | str | 视频数据唯一标识 |
+| video_path | 视频路径 | Path | 原始视频文件路径 |
+| original_fps | 原始帧率 | float | 输入视频原始FPS |
+| width | 视频宽度 | int | 原始视频宽度 |
+| height | 视频高度 | int | 原始视频高度 |
+| duration | 视频时长 | float | 视频总时长 |
+| total_frames | 总帧数 | int | 视频总帧数量 |
+| codec | 编码格式 | str | 视频编码格式 |
+| has_audio | 是否包含音频 | bool | 是否存在Audio Stream |
+
+---
+
+# 2.5.2 StandardizedVideoInfo
+
+## Purpose
+
+保存：
+
+Stage 1标准化后的视频信息。
+
+---
+
+Input:
+
+`VideoInfo`
+
+---
+
+Output:
+
+`StandardizedVideoInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| video_path | 标准化视频路径 | Path | FFmpeg处理后视频 |
+| audio_path | 标准化音频路径 | Path | 提取后的Audio |
+| target_fps | 标准帧率 | int | 默认25 FPS |
+| resolution | 标准分辨率 | tuple | 统一输出尺寸 |
+| codec | 编码格式 | str | 标准视频编码 |
+
+---
+
+# 2.5.3 AudioInfo
+
+## Purpose
+
+保存：
+
+Stage 1生成的原始标准化Audio。
+
+---
+
+Input:
+
+`VideoInfo`
+
+---
+
+Output:
+
+`AudioInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| audio_path | 音频路径 | Path | 原始提取Audio路径 |
+| sample_rate | 采样率 | int | 默认16000Hz |
+| duration | 音频长度 | float | Audio持续时间 |
+| channels | 声道数 | int | 音频声道数量 |
+
+---
+
+# 2.5.4 CorrectedAudioInfo
+
+## Purpose
+
+保存：
+
+Stage 7.1 经过 SyncNet Offset 修正后的 Audio 信息。
+
+数据由 `AVAlignmentInfo.corrected_audio_path` 提供。
+
+---
+
+Input:
+
+`AVSyncInfo + StandardizedVideoInfo`（来自 Stage 7 + Stage 1）
+
+---
+
+Output:
+
+`CorrectedAudioInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| corrected_audio_path | 修正后音频路径 | Path | Offset校正后的Audio文件 |
+| original_audio_path | 原始音频路径 | Path | Stage 1输出Audio |
+| offset | 音频偏移量 | int | SyncNet检测得到的帧偏移 |
+| corrected_timestamp | 修正后时间轴 | array | 对齐后的Audio时间信息 |
+| sync_score | 同步评分 | float | 音画同步质量 |
+
+---
+
+# 2.5.5 AVAlignmentInfo
+
+## Purpose
+
+保存：
+
+Stage 7.1 Audio-Visual Alignment Correction 的结果。
+
+包含校正后的 Audio 路径和 offset 信息，
+为 Stage 14 Audio Feature Extraction 提供时间准确的输入。
+
+---
+
+Input:
+
+`AVSyncInfo + StandardizedVideoInfo`（来自 Stage 7 + Stage 1）
+
+---
+
+Output:
+
+`AVAlignmentInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| clip_id | Clip标识 | str | 被校正的Clip标识 |
+| original_audio_path | 原始音频路径 | Path | Stage 1 输出的标准化音频 |
+| corrected_audio_path | 校正后音频路径 | Path | Offset校正后的音频文件 |
+| offset_frames | 偏移帧数 | int | SyncNet检测到的帧偏移 |
+| offset_ms | 偏移毫秒 | float | offset_ms = offset_frames / fps * 1000 |
+| correction_applied | 是否已校正 | bool | True=已应用校正，False=偏移在阈值内未校正 |
+| fps | 帧率 | float | 视频帧率 |
+
+---
+
+# 2.6 Scene and Clip Data Models
+
+# 2.6.1 SceneInfo
+
+## Purpose
+
+保存：
+
+Stage 2场景切分结果。
+
+---
+
+Input:
+
+`StandardizedVideoInfo`
+
+---
+
+Output:
+
+`SceneInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| scene_id | 场景ID | str | Scene唯一标识 |
+| video_id | 视频ID | str | 所属视频 |
+| start_frame | 起始帧 | int | Scene开始位置 |
+| end_frame | 结束帧 | int | Scene结束位置 |
+| start_time | 开始时间 | float | Scene开始时间 |
+| end_time | 结束时间 | float | Scene结束时间 |
+| duration | Scene时长 | float | Scene持续时间 |
+| coarse_face_info | 粗筛人脸信息 | Optional[CoarseFaceInfo] | Stage 3 SCRFD检测结果 |
+| filter_result | 过滤结果 | Optional[SceneFilterResult] | Stage 3过滤决策 |
+
+---
+
+# 2.6.2 ClipInfo
+
+## Purpose
+
+保存：
+
+Stage 4生成的视频Clip。
+
+---
+
+Input:
+
+`SceneInfo`
+
+---
+
+Output:
+
+`ClipInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| clip_id | Clip编号 | str | 当前Clip唯一ID |
+| scene_id | Scene编号 | str | 来源Scene |
+| video_id | 视频ID | str | 来源视频 |
+| start_frame | 起始帧 | int | Clip开始帧 |
+| end_frame | 结束帧 | int | Clip结束帧 |
+| frame_count | 帧数量 | int | Clip包含帧数量 |
+| duration | Clip长度 | float | Clip持续时间 |
+
+---
+
+# 2.6.3 SceneFilterResult
+
+## Purpose
+
+保存：
+
+Stage 3对单个Scene的过滤决策。
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| passed | 是否通过 | bool | True=通过过滤, False=被拒绝 |
+| reject_reasons | 拒绝原因 | Tuple[str, ...] | 多个拒绝原因列表 |
+
+---
+
+reject_reasons支持：
+
+| Value | 中文名称 | Description |
+|---|---|---|
+| too_short | 时长不足 | Scene duration < minimum_scene_duration |
+| no_face | 无人脸 | SCRFD未检测到任何人脸 |
+| multi_face | 多人脸 | 检测到多人脸 |
+| low_confidence | 低置信度 | 人脸检测置信度过低 |
+
+---
+
+## Design Rule
+
+禁止设计：
+
+`Stage3Report`
+
+禁止生成：
+
+`stage3_statistics.json`
+
+禁止Stage 3内部统计：
+
+- 删除scene数量
+- 删除总时长
+- 保留比例
+
+所有聚合统计由：
+
+`Stage 15 Quality Statistics`
+
+统一负责。
+
+---
+
+# 2.6.4 CoarseFaceInfo
+
+## Purpose
+
+保存：
+
+Stage 3 SCRFD粗筛检测的Per-Scene结果。
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| sampled_frame_count | 采样帧数 | int | SCRFD实际检测的帧数 |
+| face_detect_ratio | 人脸检测率 | float | 检测到人脸的帧数 / 采样帧数 |
+| single_face_ratio | 单人脸比例 | float | 单人脸的帧数 / 检测到人脸的帧数 |
+| avg_face_confidence | 平均置信度 | float | 所有人脸检测的平均置信度 |
+| max_face_count | 最大人脸数 | int | 单帧检测到的最大人脸数量 |
+
+---
+
+# 2.7 Face Processing Data Models
+
+# 2.7.1 FrameInfo
+
+## Purpose
+
+保存：
+
+视频帧级信息。
+
+---
+
+Input:
+
+`ClipInfo`
+
+---
+
+Output:
+
+`FrameInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| frame_index | 帧编号 | int | 视频全局帧索引 |
+| clip_id | Clip编号 | str | 所属Clip |
+| timestamp | 时间戳 | float | 当前帧时间 |
+| image_path | 图片路径 | Path | 当前帧存储位置 |
+
+---
+
+# 2.7.2 FaceInfo
+
+## Purpose
+
+保存：
+
+SCRFD检测结果。
+
+---
+
+Input:
+
+`FrameInfo`
+
+---
+
+Output:
+
+`FaceInfo`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| frame_index | 帧编号 | int | 当前人脸对应帧 |
+| face_id | 人脸ID | str | 当前检测人脸编号 |
+| bbox | 人脸框 | array | 人脸区域坐标 |
+| landmark_5 | 五点关键点 | array | SCRFD输出5点 |
+| confidence | 检测置信度 | float | 检测可靠性 |
+| face_crop_path | 裁剪路径 | Path | 人脸Crop结果 |
+
+---
+
+# 2.8 Feature Extraction Data Models
+
+# 2.8.1 FLAMEFeature
+
+Generated By:
+
+`Stage 12 EMICA FLAME Reconstruction`
+
+---
+
+## Data Structure
+
+| Field Name | Type | Dimension | Source | Description |
+|---|---|---|---|---|
+| `expression_code` | Tensor | [100] | EMICA ExpressionEncoder | 表情参数（EMICA 独立训练的 100 维表情空间） |
+| `pose_code` | Tensor | [6] | EMICA | global_pose[0:3] + jaw_pose[3:6] |
+| `jaw_pose` | Tensor | [3] | EMICA (final adopted) | 下颌姿态（jaw_pose = EMICA jaw，无融合） |
+| `head_pose` | Tensor | [3] | EMICA | 头部全局姿态 |
+| `eye_pose` | Optional[Tensor] | [6] | FLAME default / Stage13 | 眼球旋转参数，默认 zeros(6)，Stage 13 gaze 可替换 |
+| `shape_code` | Optional[Tensor] | [300] | MICA (optional) | 身份形状参数，仅 MICA.enabled=true 时输出 |
+| `camera_parameters` | Optional[Tensor] | [N] | DECA (optional) | 相机参数，仅 DECA.enabled=true 时输出 |
+| `source` | str | — | "EMICA" | 标明 Stage 12 使用的模型来源 |
+| `timestamp` | float | — | Stage11 via AlignedFaceInfo | 帧时间戳(秒)，用于 Stage14/17 多模态时间对齐 |
+| `clip_id` | str | — | Stage11 via AlignedFaceInfo | 所属 Clip 唯一标识，用于 Stage17 样本溯源 |
+
+---
+
+## Design Principles
+
+### 1. 结构化字段，禁止固定维度 flatten
+
+旧设计：
+```
+expcode[:50] + posecode[:6]  →  56维固定向量
+```
+
+新设计：
+```
+FLAMEFeature 保持结构化字段，flatten 操作禁止在 Stage12 完成，由 Stage17 负责。
+```
+
+**112 只是默认配置下的结果，不是接口约束。** 下游代码必须使用字段名访问，禁止依赖固定维度。
+
+### 2. expression_code 来源：EMICA ExpressionEncoder（100 维）
+
+```
+expression_code = EMICA ExpressionEncoder output [100]
+```
+
+**关键区分：EMOCA vs EMICA ExpressionEncoder**
+
+| 模型 | 表达式维度 | 来源 |
+|---|---|---|
+| EMOCA（原始） | 50 | EMOCA encoder E_flame |
+| EMICA ExpressionEncoder | 100 | 独立训练的 `nn.Linear(2048, 100)` |
+
+EMICA 包含一个**独立训练的 ExpressionEncoder**（位于 `face_encoder.expression_encoder`），
+其最后一层为 `nn.Linear(2048, 100)`，直接预测 100 维 expression code。
+
+Checkpoint 验证：
+- `face_encoder.expression_encoder.encoder.layers.2.weight` 形状为 `[100, 1024]`
+- 均值为负，标准差 0.007，所有参数非零
+- 训练方：Max Planck Institute（EMICA 项目），基于 inferno 框架，数据集 CelebV-Text，FLAME 2020
+
+**禁止：**
+- 从 EMOCA expcode[50] 截取或 zero-padding 到 100
+- 将 EMICA 的 expression 理解为 EMOCA expcode
+- 假设 EMOCA 与 EMICA ExpressionEncoder 共享 expression 空间
+
+**原因：** EMOCA 的 50 维 expression 与 EMICA ExpressionEncoder 的 100 维 expression 是完全独立的两个 latent space，
+由不同的 encoder 分支、不同的训练目标、不同的数据集训练得到。
+
+### 3. pose_code 来源
+
+```
+pose_code = concat(global_pose, jaw_pose)  → [6]
+```
+
+其中：
+- `jaw_pose` [3]: EMICA jaw（最终方案，经 FLAME mesh 重建验证；无融合）
+- `head_pose` [3]: EMICA global pose
+
+### 4. 可选字段
+
+- `shape_code`: 仅 MICA.enabled=true 时输出，否则 None
+- `camera_parameters`: 仅 DECA.enabled=true 时输出，否则 None
+- `eye_pose`: 默认 zeros(6)，Stage 13 gaze estimator 可替换
+
+### 5. jaw_pose 来源（最终方案：EMICA，无融合）
+
+```
+jaw_pose = emica_jaw   # 纯 EMICA jaw，无融合
+```
+
+| Parameter | Default | 状态 | Config Key |
+|-----------|---|---|---|
+| λ (lambda) | 1.0 | **已废弃（deprecated）**，不再参与计算 | `stage_12.jaw_fusion_lambda`（deprecated 标记） |
+| jaw_source | emica | 最终生产方案 | `stage_12.jaw_source` |
+
+Fallback / 行为矩阵：
+
+| 条件 | EMICA | SPECTRE | 行为 |
+|------|-------|---------|------|
+| 正常运行 | ✅ | ✅ | jaw_pose = EMICA（SPECTRE 原始 jaw 保留为 spectre_jawpose debug 字段） |
+| SPECTRE 禁用 | ✅ | ❌ | jaw_pose = EMICA（不受影响） |
+| SPECTRE 加载失败 | ✅ | ❌ | jaw_pose = EMICA（不受影响） |
+| EMICA 加载失败 | ❌ | ✅ | Stage12 失败 (EMICA 是主模型) |
+
+`globalpose` 和 `expcode` 始终来自 EMICA，不受 SPECTRE 可用性影响。
+
+**历史记录**：此前曾实现 SPECTRE jaw（Scheme D）与 λ 加权融合（`fused_jaw = (1−λ)·emica + λ·spectre`）；经 FLAME mesh 实际重建对比，SPECTRE jaw 版本嘴部区域存在扭曲，最终正式选择 EMICA jaw。
+
+# 2.8.2 GazeFeature
+
+Generated By:
+
+`Stage 13 Gaze Parameter Extraction`
+
+---
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| frame_index | 帧编号 | int | 对应视频帧 |
+| left_eye | 左眼视线 | array | 左眼方向 |
+| right_eye | 右眼视线 | array | 右眼方向 |
+| gaze_vector | 六维参数 | array | gaze_0_x/y/z + gaze_1_x/y/z |
+
+---
+
+# 2.8.3 AudioFeature
+
+Generated By:
+
+`Stage 14 Audio Feature Extraction`
+
+---
+
+Input:
+
+`CorrectedAudioInfo`
+
+---
+
+禁止输入：
+
+`Raw Audio`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| timestamp | 时间戳 | float | 修正后Audio时间 |
+| feature | 音频Embedding | array | HuBERT输出 |
+| dimension | 特征维度 | int | Embedding维度 |
+| source_audio | 输入Audio来源 | Path | Corrected Audio路径 |
+
+---
+
+# 2.9 Final Training Data Model
+
+# 2.9.1 TrainingSample
+
+Generated By:
+
+`Stage 17 Parameter Alignment & Fusion`
+
+---
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| sample_id | 样本ID | str | 最终训练样本编号 |
+| video_clip | 视频Clip | Path | 标准化视频 |
+| face_sequence | 人脸序列 | Path | 对齐Face序列 |
+| flame_feature | FLAME参数 | array | 3D Face参数 |
+| gaze_feature | Gaze参数 | array | 视线参数 |
+| audio_feature | Audio特征 | array | 基于Corrected Audio生成 |
+| metadata | 元数据 | dict | 样本信息 |
+
+---
+
+# 2.10 Base Stage Interface
+
+所有Stage：
+
+必须实现统一接口。
+
+Interface:
+
+`run(input_data, context)`
+
+---
+
+Input:
+
+| Parameter | Type | Description |
+|---|---|---|
+| input_data | Data Object | 当前Stage输入 |
+| context | PipelineContext | Pipeline运行环境 |
+
+---
+
+Output:
+
+| Parameter | Type | Description |
+|---|---|---|
+| output_data | Data Object | 当前Stage输出 |
+
+---
+
+# 2.11 Pipeline Context Interface
+
+Data Structure:
+
+| Field Name | 中文名称 | Type | Field Description |
+|---|---|---|---|
+| config | 配置对象 | dict | 当前运行配置 |
+| model_manager | 模型管理器 | object | 模型加载和缓存 |
+| logger | 日志对象 | object | 日志记录 |
+| storage | 存储管理器 | object | 文件路径管理 |
+| runtime_info | 运行信息 | dict | 当前任务状态 |
+
+---
+
+# 2.12 Data Model Summary
+
+`Face_Pipeline_V2`
+
+采用：
+
+统一Data Model + Stage Interface Architecture。
+
+---
+
+核心原则：
+
+- 明确每个Stage输入输出
+- Audio必须经过Stage 7同步修正
+- Feature Extraction使用Corrected Audio
+- 多模态严格时间对齐
+- 所有数据可追踪
+
+---
+
+最终生成：
+
+`Video`
+
++
+
+`Aligned Face Sequence`
+
++
+
+`FLAME`
+
++
+
+`Gaze`
+
++
+
+`Corrected Audio Feature`
+
++
+
+`Metadata`
+
+组成：
+
+完整训练数据样本。
+
+---
+
+# 2.10 Stage12 下游兼容性
+
+## 2.10.1 Stage12 → Stage13 (Gaze)
+
+GazeFeature 通过 `frame_index` 对齐 FLAMEFeature 帧。eye_pose[6] 是 placeholder zeros(6)，由 Stage13 gaze 输出替换。
+
+## 2.10.2 Stage12 → Stage14 (Audio)
+
+AudioFeature 使用 `timestamp` (float) 进行时间对齐。FLAMEFeature 必须携带 `timestamp` 字段以支持 Stage14/17 的跨模态同步。
+
+## 2.10.3 Stage12 → Stage17 (TrainingSample)
+
+TrainingSample 字段映射：
+
+| TrainingSample 字段 | 来源 | 维度 | 
+|---|---|---|
+| `flame_feature` | FLAMEFeature.expcode + posecode | 100+6=106 |
+| `gaze_feature` | GazeFeature.gaze_vector | 6 (via Stage13) |
+| `audio_feature` | AudioFeature.feature | 768 (Stage14) |
+
+FLAMEFeature 保持结构化字段，flatten 操作由 Stage17 负责。`clip_id` 和 `timestamp` 用于 Stage17 样本溯源和时间对齐。
+
+---
+
+# End of 02_Data_Model_and_Interface.md v1.0

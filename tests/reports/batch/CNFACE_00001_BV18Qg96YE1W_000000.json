@@ -1,0 +1,184 @@
+{
+  "final_status": "PASS",
+  "generated_at": "2026-08-20T01:46:48Z",
+  "input_video": "test_data/chinese_talking_videos/CNFACE_00001_BV18Qg96YE1W_000000.mp4",
+  "config": "/workspace/Face_Pipeline_V2/configs/config.yaml",
+  "test_base": "outputs/stage0_11_batch/CNFACE_00001_BV18Qg96YE1W_000000",
+  "stages": [
+    {
+      "stage": "Stage 0 (FFprobe integrity check)",
+      "status": "PASS",
+      "started": "2026-08-20T01:39:57Z",
+      "elapsed_s": 1.25,
+      "output_summary": "id=CNFACE_00001_BV18Qg96YE1W_000000 | 1920x1080 | 25.00fps | 60.2s | 1504 frames | audio=True",
+      "error": null,
+      "finished": "2026-08-20T01:39:58Z"
+    },
+    {
+      "stage": "Stage 0.5 (Resolution filter)",
+      "status": "PASS",
+      "started": "2026-08-20T01:39:58Z",
+      "elapsed_s": 0.0,
+      "output_summary": "1920x1080 vs min 534x534 | is_valid=True | reject=None",
+      "error": null,
+      "finished": "2026-08-20T01:39:58Z"
+    },
+    {
+      "stage": "Stage 1 (FFmpeg standardization)",
+      "status": "PASS",
+      "started": "2026-08-20T01:39:58Z",
+      "elapsed_s": 14.53,
+      "output_summary": "std_video=outputs/stage0_11_batch/CNFACE_00001_BV18Qg96YE1W_000000/videos/CNFACE_00001_BV18Qg96YE1W_000000/CNFACE_00001_BV18Qg96YE1W_000000_std.mp4 | audio=outputs/stage0_11_batch/CNFACE_00001_BV18Qg96YE1W_000000/videos/CNFACE_00001_BV18Qg96YE1W_000000/CNFACE_00001_BV18Qg96YE1W_000000_audio.wav",
+      "error": null,
+      "finished": "2026-08-20T01:40:12Z"
+    },
+    {
+      "stage": "Stage 2 (PySceneDetect)",
+      "status": "PASS",
+      "started": "2026-08-20T01:40:12Z",
+      "elapsed_s": 5.89,
+      "output_summary": "3 scene(s)",
+      "error": null,
+      "finished": "2026-08-20T01:40:18Z"
+    },
+    {
+      "stage": "Stage 3 (SCRFD coarse screening)",
+      "status": "PASS",
+      "started": "2026-08-20T01:40:18Z",
+      "elapsed_s": 13.59,
+      "output_summary": "3 scene(s): 2 passed, 1 rejected",
+      "error": null,
+      "finished": "2026-08-20T01:40:32Z"
+    },
+    {
+      "stage": "Stage 4 (Sliding-window clips)",
+      "status": "PASS",
+      "started": "2026-08-20T01:40:32Z",
+      "elapsed_s": 0.0,
+      "output_summary": "11 clip(s)",
+      "error": null,
+      "finished": "2026-08-20T01:40:32Z"
+    },
+    {
+      "stage": "Stage 5 (SCRFD detect/crop)",
+      "status": "PASS",
+      "started": "2026-08-20T01:40:32Z",
+      "elapsed_s": 27.9,
+      "output_summary": "11 sequence(s), 2191 face detections",
+      "error": null,
+      "finished": "2026-08-20T01:41:00Z"
+    },
+    {
+      "stage": "Stage 5.1 (ByteTrack face tracking)",
+      "status": "PASS",
+      "started": "2026-08-20T01:41:00Z",
+      "elapsed_s": 0.0,
+      "output_summary": "11 sequence(s), 0 unique track(s)",
+      "error": null,
+      "finished": "2026-08-20T01:41:00Z"
+    },
+    {
+      "stage": "Stage 5.2 (Single-face filter)",
+      "status": "PASS",
+      "started": "2026-08-20T01:41:00Z",
+      "elapsed_s": 0.0,
+      "output_summary": "11 input: 11 passed, 0 rejected (hard filter, dropped)",
+      "error": null,
+      "finished": "2026-08-20T01:41:00Z"
+    },
+    {
+      "stage": "Stage 5.3 (Temporal stability)",
+      "status": "PASS",
+      "started": "2026-08-20T01:41:00Z",
+      "elapsed_s": 0.0,
+      "output_summary": "11 input: 11 passed, 0 rejected (hard filter, dropped)",
+      "error": null,
+      "finished": "2026-08-20T01:41:00Z"
+    },
+    {
+      "stage": "Stage 6 (6DRepNet pose)",
+      "status": "PASS",
+      "started": "2026-08-20T01:41:00Z",
+      "elapsed_s": 41.75,
+      "output_summary": "11 sequence(s), 2200 pose(s)",
+      "error": null,
+      "finished": "2026-08-20T01:41:41Z"
+    },
+    {
+      "stage": "Stage 7 (SyncNet A/V sync)",
+      "status": "PASS",
+      "started": "2026-08-20T01:41:41Z",
+      "elapsed_s": 20.88,
+      "output_summary": "11 clip(s)",
+      "error": null,
+      "finished": "2026-08-20T01:42:02Z"
+    },
+    {
+      "stage": "Stage 7.1 (A/V alignment)",
+      "status": "PASS",
+      "started": "2026-08-20T01:42:02Z",
+      "elapsed_s": 1.05,
+      "output_summary": "11 clip(s)",
+      "error": null,
+      "finished": "2026-08-20T01:42:03Z"
+    },
+    {
+      "stage": "Stage 8 (HyperIQA quality)",
+      "status": "PASS",
+      "started": "2026-08-20T01:42:03Z",
+      "elapsed_s": 224.41,
+      "output_summary": "11 sequence(s), 2200 score(s)",
+      "error": null,
+      "finished": "2026-08-20T01:45:48Z"
+    },
+    {
+      "stage": "Stage 9 (Quality fusion/filter)",
+      "status": "PASS",
+      "started": "2026-08-20T01:45:48Z",
+      "elapsed_s": 0.01,
+      "output_summary": "11 clip(s), 7 accepted",
+      "error": null,
+      "finished": "2026-08-20T01:45:48Z"
+    },
+    {
+      "stage": "Stage 9.5 (Clip export)",
+      "status": "PASS",
+      "started": "2026-08-20T01:45:48Z",
+      "elapsed_s": 31.96,
+      "output_summary": "accepted=7 exported_videos=7 exported_audio=7 manifest=7 failures=0",
+      "error": null,
+      "finished": "2026-08-20T01:46:20Z"
+    },
+    {
+      "stage": "Stage 10 (InsightFace landmark)",
+      "status": "PASS",
+      "started": "2026-08-20T01:46:20Z",
+      "elapsed_s": 6.19,
+      "output_summary": "1400 landmark(s)",
+      "error": null,
+      "finished": "2026-08-20T01:46:26Z"
+    },
+    {
+      "stage": "Stage 11 (Affine alignment)",
+      "status": "PASS",
+      "started": "2026-08-20T01:46:26Z",
+      "elapsed_s": 21.78,
+      "output_summary": "1400 aligned face(s)",
+      "error": null,
+      "finished": "2026-08-20T01:46:48Z"
+    }
+  ],
+  "video_info": {
+    "video_id": "CNFACE_00001_BV18Qg96YE1W_000000",
+    "width": 1920,
+    "height": 1080,
+    "fps": 25.0,
+    "total_frames": 1504,
+    "duration": 60.2,
+    "has_audio": true
+  },
+  "resolution_min": {
+    "width": 534,
+    "height": 534
+  }
+}

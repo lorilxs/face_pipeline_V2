@@ -1,0 +1,426 @@
+# Face_Pipeline_V2 Configuration Template
+# All Pipeline parameters MUST come from this file (AISDD 4.3.1)
+
+# Pipeline Mode Selection (AISDD orchestration-level switch).
+#   open_domain : full Stage0-17 pipeline with quality filtering
+#                 (Stage6/7/7.1/8/9) — DEFAULT, backward compatible.
+#   dataset     : existing high-quality datasets — skip quality stages,
+#                 chain = Stage0-5 -> Stage10 -> 11 -> 12 -> 13 -> 14 -> 17.
+pipeline_mode: open_domain        # 管线运行模式：open_domain=全流程含质量过滤(Stage6/7/7.1/8/9，默认)；dataset=直接使用高质量数据集，跳过质量阶段
+
+project:                          # 项目信息
+  project_name: Face_Pipeline_V2  # 项目名称
+  version: v1.0                   # 项目版本
+  environment: development        # 运行环境标识 (development/production)
+
+video:                            # 视频通用处理参数
+  target_fps: 25                  # 目标帧率（各阶段统一按此帧率处理与对齐）
+  audio_sample_rate: 16000        # 音频采样率(Hz)
+  resolution: [256, 256]          # 默认分辨率 [宽, 高]（人脸裁剪/对齐的尺寸参考）
+  codec: h264                     # 视频编码格式
+  # Stage 0: Video Integrity Check (AISDD 3.3.6)
+  check_video_stream: true        # Stage0 是否校验视频流完整性
+  check_audio_stream: true        # Stage0 是否校验音频流完整性
+  ffprobe_path: null              # ffprobe 可执行文件路径；null=自动从 PATH 检测
+
+# Stage 0.5: Resolution Filter (AISDD 3.4) — video-level hard filter before FFmpeg
+stage_00_resolution_filter:        # Stage0.5 分辨率过滤（FFmpeg 处理前的视频级硬过滤）
+  enabled: true                    # 是否启用分辨率过滤
+  min_width: 360                   # 默认512，最小视频宽度(px)，低于则整段视频被拒绝
+  min_height: 360                  # 默认512，最小视频高度(px)，低于则整段视频被拒绝
+
+scene:                             # 场景检测参数
+  detector: PySceneDetect          # 场景检测器类型
+  threshold: 0.5                   # 场景切换检测阈值
+  min_scene_duration: 1.0          # 最小场景时长(秒)，短于此的场景被丢弃或合并
+
+# Stage 2: Scene Segmentation (AISDD 3.5.6)
+stage_02:                          # Stage2 场景分割
+  detector: ContentDetector        # 检测器类型（内容变化检测器）
+  threshold: 6.0                   # 自适应阈值下限（最低阈值，防止漏检真实转场）
+  min_scene_len: 15                # 最小场景长度(帧)，低于此的候选场景被合并，也就是如果一个场景只有6秒，不足15，会跟后续的场景合并起来
+  adaptive_threshold:              # 按本片运动噪声自适应调阈值，解决高运动单镜头被切碎的问题
+    enabled: true                  # 是否启用（默认启用）
+    factor: 2.0                    # 有效阈值 = max(threshold, factor × 本片相邻帧内容差值 p99)
+  face_subtitle:                 # 大号遮脸字幕检测：把覆盖人脸的大字幕切成独立场景，供下游人脸质量拒绝
+    enabled: true                  # 是否启用（默认启用）
+    band_top: 0.33                 # 检测带顶边界（占帧高比例）——中/上面部区域
+    band_bottom: 0.67              # 检测带底边界（占帧高比例）——排除底部固定字幕带
+    sensitivity: 4.0               # 字幕进入阈值：帧信号须高出本片自身中位基线的稳健(MAD)σ倍数（越高越严格）
+    min_subtitle_frames: 5         # 连续判定为字幕的最少帧数（少于则忽略）
+    settle_frames: 2               # 信号回落到基线后再额外保留的帧数（覆盖淡出尾帧，保证切在完全干净帧）
+
+# Stage 3: Coarse Face Screening (AISDD 3.6)
+stage_03:                          # Stage3 粗筛（人脸检测/场景是否可用）
+  enabled: true                    # 是否启用粗筛
+  sampling_fps: 1                  # 采样帧率(fps)：每秒抽1帧做人脸检测
+  min_duration: 1                  # 场景最小时长(秒)
+  min_face_detect_ratio: 0.75      # 默认0.95，最小人脸检出比例：场景内检出人脸的帧占比须≥此值
+  min_single_face_ratio: 0.95      # 最小单人脸比例：单张人脸帧的占比须≥此值
+  min_face_confidence: 0.4         # 人脸检测最低置信度（Stage3 粗筛用） 
+  # SCRFD wrapper internal detection floor for the Stage 3 coarse gate.
+  # Must stay LOW (<= min_face_confidence) so occluded/partially-cropped real
+  # faces scoring ~0.35-0.5 (top of head cut by camera) are not dropped by the
+  # wrapper before the ratio/confidence checks below run.  Shared with Stage 5
+  # via the cached model instance (desired for this talking-face dataset).
+  detection_confidence_threshold: 0.3  # SCRFD 包装器内部检测下限（Stage3/5 共用缓存模型）。须保持低值(≤min_face_confidence)，避免遮挡/裁切人脸(0.35~0.5分)在比例检查前被误杀
+
+  debug:                               # Stage3 调试输出
+    export_valid_scenes: false         # 是否导出通过粗筛的场景（用于人工检查）
+    output_dir: outputs/debug/stage_03_scenes  # 调试场景导出目录
+
+# Stage 4: Temporal Clip Generation / Sliding Window (AISDD 3.7)
+stage_04:                            # Stage4 时序片段生成（滑动窗口切段）
+  enabled: true                      # 是否启用切段
+  mode: sliding_window               # 切段模式：sliding_window 滑动窗口 | segment 按场景分段
+  window_size: 8                     # 窗口长度(秒)
+  stride: 8                          # 窗口步长(秒)，=窗口长度时窗口不重叠
+  target_fps: 25                     # 输出片段帧率
+  keep_tail: true                    # 是否保留尾部不足一个窗口的余量片段
+  min_tail_duration: 1               # 保留尾部片段的最小时长(秒)，不足则丢弃
+
+# Stage 5: Full Face Detection & Crop (AISDD 3.8)
+stage_05:                            # Stage5 全量人脸检测与裁剪
+  enabled: true                      # 是否启用
+  face_selection:                    # 多人时的人脸选择
+    strategy: largest_area           # 选择策略：取面积最大的人脸
+  crop:                              # 裁剪设置
+    enabled: true                    # 是否裁剪人脸区域
+    size: 256                        # 裁剪尺寸（**已废弃** — 现按原始分辨率保存裁剪图）
+    boundary_check:                  # 人脸框越界检查
+      enabled: true                  # 是否启用越界检查
+      fallback_ratio: 1.5            # **已废弃**
+
+# Stage 5 Base Face Crop Asset generation (bbox expansion on original frame)
+# Expand happens at bbox level BEFORE cropping — ensures full face region
+# (forehead, chin, cheeks) is preserved in the raw crop.
+stage_05_face_crop:                  # Stage5 基础人脸裁剪图生成
+  expand_ratio: 2.0                  # 人脸框扩大倍数（2.0=宽高各扩大一倍，保留完整额头/下巴/脸颊）
+  save_raw_crop: true                # 是否以原始分辨率保存裁剪图（不缩放）
+  save_frames: false                 # 是否逐帧保存中间帧（调试用）
+
+# Stage 5 Face-Resolution Pre-filter (AISDD 3.8.1 — video-level hard gate)
+# Placed AFTER Stage 5 detection/crop output and BEFORE Stage 5.1–Stage 9 so
+# low-resolution talking-face videos never waste downstream compute.
+# Only the SCRFD *tight* bbox (FaceInfo.bbox) is measured — never the expanded
+# crop bbox nor any resized / Stage11 / EMICA size.  Because Stage 11 performs
+# the authoritative eye-distance affine alignment, this is a coarse pre-filter.
+# The gate measures the tight-bbox short edge min(w,h) against
+# ``min_face_short_side`` (validated on 6 real samples: rejects short side
+# <= 71, accepts >= 76).  It is NOT an official EMICA requirement.
+stage_05_face_resolution_filter:   # Stage5 人脸分辨率预过滤（5.1–Stage9 前的视频级硬门禁）
+  enabled: true                     # 是否启用（阈值已用 stage5_tset A–F 夹具验证：A 拒收，F/B/C/D/E 通过）
+  min_face_short_side: 75           # 目标人脸 tight bbox 短边 min(w,h) 最小像素值（替换旧的宽/高双阈值）
+  min_face_resolution_ratio: 0.90   # 合格帧占预期帧的最小比例
+  min_valid_face_frames: 5          # 最小有效目标人脸帧数
+
+# Stage 5.1: Face Tracking Enhancement (AISDD 3.9.1)
+# Enable/disable via: enhancements.stage_05_1_face_tracking.enabled
+stage_05_1:                          # Stage5.1 人脸跟踪
+  tracker:                           # 跟踪器配置
+    type: bytetrack                  # 跟踪器类型
+    track_buffer: 30                 # 跟踪缓冲帧数（跟踪丢失后保留轨迹的帧数）
+    match_thresh: 0.8                # 匹配阈值：检测框与轨迹的匹配置信度下限
+
+face:                                # 人脸检测全局配置
+  model: SCRFD                        # 人脸检测模型
+  confidence_threshold: 0.6           # 人脸检测置信度阈值（检测为人脸的最低分数）
+  sampling_rate: 1                    # 人脸检测采样率（每 N 帧检测一次，1=逐帧）
+
+# SCRFD ONNX execution provider (auto / ppu / cuda / cpu).
+#   auto -> prefer PPU/CUDA, fall back to CPU
+#   ppu  -> force PPU (CUDA-compatible PPU is reached via CUDA EP), fall back to CPU
+#   cpu  -> force CPU
+scrfd:                               # SCRFD 模型推理配置
+  execution_provider: auto           # 推理执行后端：auto 自动(优先PPU/CUDA,回退CPU) | ppu 强制PPU | cuda 强制CUDA | cpu 强制CPU
+
+# Stage 6: Head Pose Estimation (AISDD 3.10)
+stage_06:                            # Stage6 头部姿态估计
+  enabled: true                      # 是否启用姿态估计
+  model_name: sixdrepnet             # 姿态估计模型
+  batch_size: 32                     # 推理批大小
+  device: cuda                       # 推理设备 (cuda/cpu)
+  preprocess:                        # 预处理设置
+    input_size: 256                  # 6DRepNet 输入分辨率（仅缩放，人脸扩边已在Stage5完成）
+
+# Stage 9 filtering thresholds (not used by Stage 6)
+pose:                                # 姿态过滤阈值（Stage9 硬过滤用）
+  model: 6DRepNet                    # 姿态模型
+  yaw_threshold: 45.0                # 偏航角(yaw)阈值(度)：|yaw|>45° 视为不合格帧
+  pitch_threshold: 30.0              # 俯仰角(pitch)阈值(度)：|pitch|>30° 视为不合格帧
+  roll_threshold: 40.0               # 翻滚角(roll)阈值(度)：|roll|>40° 视为不合格帧
+
+# Stage 7: A/V Sync Detection (AISDD 3.11)
+stage_07:                            # Stage7 音视频同步检测
+  enabled: true                      # 是否启用
+  model_name: syncnet                # 同步检测模型
+  checkpoint: models/syncnet/syncnet_v2.model  # 模型权重路径
+  device: cpu                        # 推理设备（SyncNet 通常 CPU 即可）
+  sample_rate: 16000                 # 音频采样率(Hz)
+  batch_size: 32                     # 推理批大小
+  vshift: 10                         # 偏移搜索范围(帧)：在±vshift 帧内搜索最佳音视频对齐
+  preprocess:                        # 预处理设置
+    input_size: 256                  # SyncNet 人脸裁剪视频帧尺寸
+
+# Stage 7.1: A/V Sync Correction (Audio Timeline Alignment)
+# Applies SyncNet offset to align audio with video.
+# Enabled by default — audio consistency is a fundamental requirement.
+# max correction range is derived from sync.max_offset_frames via FPS conversion.
+stage_07_1_av_alignment:             # Stage7.1 音视频同步修正（音频时间线对齐）
+  enabled: true                      # 是否启用修正
+  correction_threshold_ms: 50        # 修正阈值(毫秒)：|偏移|<50ms 时跳过修正
+  output_dir: stage_outputs/av_alignment  # 中间产物输出目录（相对 storage.output_dir）
+
+# Stage 7.1 → Stage 9.5 audio asset lifecycle management.
+# Stage 7.1 writes per-clip intermediate audio to
+# <output_dir>/stage_outputs/av_alignment/<clip_id>/ (raw + aligned wav, kept
+# for debugging). Stage 9.5 exports ONLY the aligned audio as the final
+# canonical asset audio/{clip_id}.wav; the raw clip audio is intentionally NOT
+# exported as a final asset.
+# cleanup_after_export:
+#   false -> keep Stage 7.1 intermediate audio (default, safest)
+#   true  -> Stage 9.5 automatically removes stage_outputs/av_alignment/<clip_id>/
+#            after a successful per-clip export (video + aligned audio copied),
+#            leaving only the final flat assets.  The final dirs clips/ and
+#            audio/ are protected and never deleted.
+audio_alignment:                     # 音频对齐生命周期管理
+  cleanup_after_export: true         # 导出后是否删除 Stage7.1 中间音频：false=保留(安全)；true=Stage9.5 导出成功后自动清理中间音频目录
+
+# Stage 9.5: Clip Export — final training data assets (accepted clips only).
+stage_09_5:                          # Stage9.5 片段导出（仅导出通过过滤的片段）
+  clips_dir: clips                   # 最终视频片段目录：clips/{clip_id}.mp4
+  audio_dir: audio                   # 最终规范(对齐后)音频目录：audio/{clip_id}.wav
+  manifest: manifest.json            # 导出清单文件名
+
+# Unified Audio-Visual Sync configuration.
+# Shared by Stage 7.1 (correction range).
+# Stage 9 hard filter uses quality.sync section (raw LSE-C + offset thresholds).
+# NOTE: max_offset_frames here (Stage 7.1 correction range) MUST align with
+#       quality.sync.max_offset_frames (Stage 9 acceptance range). Both = 8.
+sync:                                # 音视频同步统一配置
+  model: SyncNet                     # 同步模型
+  max_offset_frames: 8               # 最大偏移帧数：Stage7.1 最大修正范围 = 25fps下320ms（须与 quality.sync.max_offset_frames 一致，均为8）
+  correction_enable: true            # 是否启用偏移修正
+
+# Stage 8: Face Quality Assessment (AISDD 3.12)
+stage_08:                            # Stage8 人脸质量评估
+  enabled: true                      # 是否启用
+  model_name: hyperiqa               # 质量评估模型
+  checkpoint: models/HyperIQA/       # 模型权重路径
+  device: cuda                       # 推理设备
+  batch_size: 32                     # 推理批大小
+  preprocess:                        # 预处理设置
+    input_size: 224                  # HyperIQA 输入分辨率（仅缩放，人脸扩边已在Stage5完成）
+
+# Stage 9 filtering thresholds (not used by Stage 8)
+quality:                             # 人脸质量/同步过滤阈值（Stage9 硬过滤用）
+  model: HyperIQA                    # 质量模型
+  quality_threshold: 0.26            # 质量分硬过滤阈值：低于此分的片段被拒（hdtf视频实际分布 median=0.47，0.4 能保留 ~90% 高质量 clip）
+  batch_size: 32                     # 推理批大小
+  # SyncNet hard filter — uses raw Stage 7 AVSyncInfo values (NOT normalized)
+  # offset: frame offset between audio and video
+  # lse_c: LSE-C = median(distance) - min(distance), typical range 3-10
+  sync:                              # 音视频同步硬过滤
+    enabled: true                    # 是否启用同步硬过滤
+    max_offset_frames: 8             # 音视频偏移容忍上限(帧)：|offset|<=8帧(25fps下320ms) 才通过
+    min_lse_c: 3.0                   # LSE-C 最小值：>=4.0 视为同步可靠（douyin open_domain 经验值）
+
+# Stage 9: Quality Metrics Fusion & Hard Filtering (AISDD 3.13)
+# Hard filter gates (per-dimension, all must pass):
+#   - pose:  min_pose_ratio (config below)
+#   - sync:  quality.sync.max_offset_frames + quality.sync.min_lse_c (raw LSE-C)
+#   - quality: quality.quality_threshold
+# Fusion weights: used ONLY for Stage 9.1 Quality Ranking weighted score.
+#   sync weight here uses normalized sync_score (not raw LSE-C).
+stage_09:                            # Stage9 质量指标融合与硬过滤
+  enabled: true                      # 是否启用 Stage9 过滤
+  min_pose_ratio: 0.85               # 默认0.85，硬过滤：姿态合格帧占比下限（HDTF视频pose全维1.0）
+  fusion_threshold: null             # 可选整体融合分数门槛；null=关闭（不启用融合分闸门）
+  fusion_weights:                    # 融合权重（仅用于 Stage9.1 质量排序加权分）
+    pose: 0.4                        # 姿态权重（Stage9.1 排序用，非硬过滤）
+    sync: 0.3                        # 同步权重（Stage9.1 排序用 — 使用归一化 sync_score）
+    quality: 0.3                     # 质量权重（Stage9.1 排序用）
+
+# Stage 9.1: Quality Ranking (Optional Enhancement)
+# Weighted multi-metric score fusion for sorting and tier assignment.
+# All parameters MUST come from this config — no hard-coding in Python.
+quality_ranking:                     # Stage9.1 质量排序（可选增强）
+  weights:                           # 各维度排序权重
+    pose: 0.3                        # 姿态权重
+    sync: 0.3                        # 同步权重
+    face_quality: 0.4                # 人脸质量权重
+  levels:                            # 质量分级阈值（按加权总分）
+    excellent: 0.85                  # 总分>=0.85 为优秀
+    good: 0.70                       # 总分>=0.70 为良好
+    normal: 0.50                     # 总分>=0.50 为普通
+
+# Stage 10: High-Precision Landmark Extraction (AISDD 3.14)
+landmark:                            # Stage10 高精度关键点提取
+  enabled: true                      # 是否启用
+  model_path: models/insightface/2d106det.onnx  # 106点关键点模型路径
+  device: auto                       # 推理设备
+
+# Stage 11: Face Alignment (AISDD 3.15)
+alignment:                           # Stage11 人脸对齐
+  enabled: true                      # 是否启用对齐
+  output_size: 256                   # 对齐后人脸输出分辨率（正方形边长）
+  # resolution: 256                  # 旧版 output_size 别名（保留向后兼容）
+  save_aligned_faces: true           # 是否保存对齐后的人脸图像
+  # Canonical alignment template — normalized 256×256 canvas coordinates.
+  #   template.eye_distance : eye-to-eye distance in px → controls canonical face size
+  #   template.eye_center_y : eye-line Y in px → controls vertical placement in canvas
+  #   scale_factor          : final_scale = original_scale * scale_factor.
+  #                           <1.0 shrinks the canonical face (fixes chin/forehead
+  #                           clipping); >1.0 enlarges it. Default 1.0 = current behavior.
+  # NOTE: defaults (80.541 / 118.0 / 1.0) reproduce the pre-config template exactly.
+  template:                          # 标准对齐模板（归一化 256×256 画布坐标）
+    eye_distance: 80.541             # 双眼间距(px)：控制标准脸大小
+    eye_center_y: 127.0              # 眼线Y坐标(px)：控制脸在画布中的垂直位置
+  scale_factor: 0.77                 # 最终缩放系数：final_scale = 原始尺度 * scale_factor（<1 缩小标准脸，修复下巴/额头裁切；>1 放大）
+  # output_dir is DEPRECATED — aligned faces now write to storage.output_dir/aligned_faces
+  output_dir: outputs/aligned_faces  # 已废弃、忽略（对齐脸现写入 storage.output_dir/aligned_faces）
+
+flame:                               # FLAME 模型参数
+  model: EMICA                       # FLAME 参数估计模型
+  device: cuda:0                     # 推理设备
+  expression_dim: 100                # 表情参数维度
+  pose_dim: 6                        # 姿态参数维度
+
+# Stage 12: FLAME Parameter Extraction (EMICA + SPECTRE, AISDD 3.16)
+stage12:                             # Stage12 FLAME 参数提取
+  enabled: true                      # 是否启用
+  runtime_mode: subprocess           # 运行模式："subprocess"(Docker 子进程) | "direct"(进程内)
+  emica:                             # EMICA 模型配置
+    enabled: true                    # 是否启用 EMICA
+    checkpoint: models/EMICA/EMICA-CVT_flame2020_notexture/checkpoints/model-epoch=38-val/loss_total=3.88806534.ckpt  # EMICA 权重路径
+  spectre:                           # SPECTRE 模型配置
+    enabled: true                    # 是否启用 SPECTRE
+    checkpoint: third_party/inferno/spectre/spectre/data/deca_model.tar  # SPECTRE 权重路径
+  # Production default (Experiment A): all three sources = EMICA (FLAME mesh
+  # validated). SPECTRE raw jaw is kept as spectre_jawpose debug field.
+  # To run Experiment B (all SPECTRE), use configs/config_dataset_mode_spectre.yaml
+  # or set the three *_source fields to "spectre". Mixed source is FORBIDDEN
+  # (known to distort mouth mesh / break parameter-space consistency).
+  expression_source: emica           # 表情参数来源：emica | spectre（生产默认=emica，混合来源禁止）
+  head_source: emica                 # 头部姿态参数来源
+  jaw_source: emica                  # 下巴(嘴部)参数来源
+  jaw_fusion_lambda:                 # 下巴融合系数（已废弃）
+    deprecated: true                 # 标记该参数已废弃
+    reason: "jaw source switched to EMICA (FLAME mesh validated)"  # 废弃原因说明
+    legacy_default: 1.0              # 旧版默认值
+  batch_size: 8                      # 推理批大小
+  device: cuda                       # 子进程推理设备
+  subprocess_timeout: 3600           # 子进程推理超时时间(秒)
+  output_dir: outputs/stage12_flame  # 输出目录
+
+gaze:                                # 视线(注视)估计模型参数
+  model: MediaPipe                   # 视线模型
+  output_dim: 6                      # 输出维度
+
+# Stage 13: Gaze Parameter Extraction (MediaPipe, AISDD 3.17)
+stage13:                             # Stage13 视线参数提取
+  enabled: true                      # 是否启用
+  gaze:                              # 视线模型配置
+    enabled: true                    # 是否启用视线提取
+    model_path: models/mediapipe/face_landmarker.task  # MediaPipe 人脸关键点模型路径
+    delegate: cpu                    # 推理后端：cpu | gpu
+    batch_size: 8                    # 推理批大小（为将来批处理预留）
+    image_size: [256, 256]           # 对齐后人脸输入尺寸
+  output_dir: outputs/stage13_gaze   # 输出目录
+
+audio:                               # 音频特征提取全局配置
+  backend: hubert                     # 音频特征后端模型
+  # HuggingFace-format HuBERT directory (config.json + pytorch_model.bin).
+  # The fairseq checkpoint models/hubert/hubert_base_ls960.pt is NOT usable
+  # on Python 3.12 (fairseq dataclass crash); Stage 14 loads via transformers.
+  model_path: models/hubert/chinese-hubert-base  # HuggingFace 格式 HuBERT 目录（config.json + pytorch_model.bin）
+  sample_rate: 16000                 # 音频采样率(Hz)
+  feature_dim: 768                   # 音频特征维度
+
+# Stage 14: Audio Feature Extraction (AISDD 3.20) — HuBERT
+stage_14:                            # Stage14 音频特征提取
+  enabled: true                      # 是否启用
+  model_path: models/hubert/chinese-hubert-base   # HuBERT 模型路径（若设置则覆盖 audio.model_path）
+  device: auto                       # 推理设备：auto / cpu / cuda
+  fps: 25                            # 特征对齐目标帧率（视频帧率）
+  output_dir: outputs/stage14_audio  # 输出目录
+
+# Stage 17: Training Sample Assembly (AISDD 3.23) — Parameter Alignment & Fusion
+# 三模态 (Stage12 FLAME / Stage13 Gaze / Stage14 Audio) 按统一时间轴对齐,
+# 装配为 clip-level TrainingSample 样本包 (见 docs/Stage17_Design_Review.md §4)。
+stage17:                             # Stage17 训练样本装配（三模态对齐融合）
+  enabled: true                      # 是否启用
+  output_dir: outputs/stage17_fusion # 输出目录
+  fps: 25                            # 视频帧率 (写入 metadata, 时间网格由 FLAME.timestamp 承载)
+  visual_dim: 112                    # 视觉特征维度（FLAME 参数维度）
+  audio_dim: 768                     # 音频特征维度（对齐 HuBERT feature_dim）
+  audio_match: nearest_timestamp     # 音频匹配策略：按最近时间戳对齐
+  audio_tolerance: 0.04              # audio nearest 匹配容差(秒, 与设计文档 40ms 边界一致)
+
+# Stage 1: AV Standardization (AISDD 3.4.6)
+stage_01:                            # Stage1 音视频标准化
+  target_fps: 25                     # 标准化目标帧率
+  audio_sample_rate: 16000           # 标准化音频采样率(Hz)
+  video_codec: libx264               # 视频编码格式
+  audio_codec: pcm_s16le             # 音频编码格式
+  ffmpeg_path: null                  # ffmpeg 可执行文件路径；null=自动从 PATH 检测
+  output_dir: outputs/videos         # 标准化后视频输出目录
+
+models:                              # 各模型路径与推理设备汇总
+  scrfd:                             # SCRFD 人脸检测
+    path: models/SCRFD               # 模型目录/权重路径
+    device: cuda                     # 推理设备
+    execution_provider: auto         # 推理执行后端：auto / ppu / cuda / cpu
+  sixdrepnet:                        # 6DRepNet 头部姿态估计
+    path: models/6DRepNet            # 模型路径
+    device: auto                     # 推理设备
+  syncnet:                           # SyncNet 音视频同步检测
+    path: models/syncnet/syncnet_v2.model  # 模型权重路径
+    device: auto                     # 推理设备
+  hyperiqa:                          # HyperIQA 人脸质量评估
+    path: models/HyperIQA            # 模型目录
+    device: auto                     # 推理设备
+    resnet50_path: models/HyperIQA/resnet50-19c8e357.pth  # HyperIQA 骨干 resnet50 权重路径
+  insightface_landmark:              # InsightFace 2D 关键点
+    path: models/insightface/2d106det.onnx  # 106点关键点 ONNX 模型路径
+    device: auto                     # 推理设备
+
+runtime:                             # 运行时时资源与并行配置
+  device: auto                       # 默认推理设备：auto 自动选择
+  backend: ppu                       # 推理后端：ppu（PPU 加速）
+  video_reader: ffmpeg               # 视频帧读取后端：ffmpeg | opencv
+  num_workers: 4                     # 并行工作进程数
+  batch_size: 32                     # 默认推理批大小
+  enable_parallel: true              # 是否启用并行处理
+
+# Enhancement Module Control (AISDD 3.9)
+# Professional talking-face data: disable all enhancements.
+# Open-domain (vlog, social-media, multi-person) data: enable as needed.
+enhancements:                        # 增强模块总开关（AISDD 3.9）
+  stage_05_1_face_tracking:          # Stage5.1 人脸跟踪增强
+    enabled: true                    # 是否启用
+  stage_05_2_single_face_filter:     # Stage5.2 单人脸过滤增强
+    enabled: true                    # 是否启用
+    max_identity_anomaly_ratio: 0.05 # 最大身份异常比例：同一片段中身份跳变帧占比上限
+  stage_05_3_temporal_stability:     # Stage5.3 时序稳定性过滤增强
+    enabled: true                    # 是否启用
+    max_center_motion: 15.0          # 最大人脸中心位移(px)：相邻帧人脸框中心跳动超过此值的帧记为异常
+    max_scale_change_ratio: 0.25     # 最大尺度变化比例：相邻帧人脸框尺度跳变超过此比例的帧记为异常
+    max_stability_anomaly_ratio: 0.05  # 最大稳定性异常比例：异常帧占比须≤此值，否则整段被拒
+  stage_09_1_quality_ranking:        # Stage9.1 质量排序增强
+    enabled: false                   # 是否启用（默认关闭）
+
+storage:                             # 数据存储目录配置
+  input_dir: data/input              # 输入数据目录
+  output_dir: outputs                # 总输出目录（各阶段产物相对此目录）
+  model_dir: models                  # 模型目录
+  log_dir: outputs/logs              # 日志目录
+
+# Real model validation (AISDD validation tools)
+validation:                          # 真实模型验证配置
+  output_dir: outputs/validation     # 验证结果输出目录
+  save_json: true                    # 是否保存 JSON 验证结果
+  save_report: true                  # 是否保存验证报告
+  visualization:                     # 验证可视化
+    enabled: true                    # 是否启用可视化
+    sample_count: 10                 # 可视化的样本数量

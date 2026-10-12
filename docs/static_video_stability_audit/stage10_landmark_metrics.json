@@ -1,0 +1,20 @@
+{
+ "video": "test_data/1_8s.mp4",
+ "n_frames": 200,
+ "n_landmark_frames": 200,
+ "mean_jitter_px": 0.1418,
+ "std_jitter_px": 0.2134,
+ "max_jump_px": 0.9505,
+ "max_jump_frame": 182,
+ "max_point_jump_px": 1.2087,
+ "max_point_jump_frame": 197,
+ "eye_jitter": 0.1412,
+ "mouth_jitter": 0.1414,
+ "jaw_jitter": 0.1476,
+ "region": {
+  "eye": 0.1412,
+  "mouth": 0.1414,
+  "jaw": 0.1476
+ },
+ "n_transitions": 199
+}

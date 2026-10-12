@@ -1,0 +1,28 @@
+{
+ "video": "test_data/1_8s.mp4",
+ "n_frames": 200,
+ "head": {
+  "mean": 0.0241,
+  "std": 0.0206,
+  "max": 0.1066,
+  "max_frame": 172
+ },
+ "jaw": {
+  "mean": 0.0098,
+  "std": 0.009,
+  "max": 0.0336,
+  "max_frame": 184
+ },
+ "expression": {
+  "mean": 0.0189,
+  "std": 0.0153,
+  "max": 0.0674,
+  "max_frame": 172
+ },
+ "head_mean_delta_deg": 0.0241,
+ "head_max_delta_deg": 0.1066,
+ "jaw_mean_delta_deg": 0.0098,
+ "jaw_max_delta_deg": 0.0336,
+ "expression_mean_delta_l2": 0.0189,
+ "expression_max_delta_l2": 0.0674
+}

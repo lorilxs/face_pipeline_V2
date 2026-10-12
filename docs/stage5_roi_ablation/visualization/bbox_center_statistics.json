@@ -1,0 +1,20 @@
+[
+ {
+  "method": "baseline",
+  "cx_mean": 933.5338,
+  "cy_mean": 389.5388,
+  "cx_std": 6.0883,
+  "cy_std": 5.7995,
+  "velocity_mean": 2.2653,
+  "velocity_max": 14.0307
+ },
+ {
+  "method": "roi",
+  "cx_mean": 935.5182,
+  "cy_mean": 379.9083,
+  "cx_std": 4.6498,
+  "cy_std": 4.3636,
+  "velocity_mean": 2.7596,
+  "velocity_max": 8.6466
+ }
+]

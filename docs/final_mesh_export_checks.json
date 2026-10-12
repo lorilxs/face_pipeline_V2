@@ -1,0 +1,1364 @@
+{
+  "summary": {
+    "clips_total": 11,
+    "stage12_ok": 11,
+    "stage13_ok": 11,
+    "stage14_ok": 11,
+    "stage17_ok": 11,
+    "export_ok": 11,
+    "clip_id_consistent_across_stages": true,
+    "export_clip_id_consistent": true,
+    "manifest_clip_id_consistent": true,
+    "overall": "PASS"
+  },
+  "export": {
+    "export_root": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage17_multimodal_export",
+    "n_clips": 11
+  },
+  "clip_ids": [
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+  ],
+  "clip_sets": {
+    "stage_inputs": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "stage12": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "stage13": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "stage14": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "stage17": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "export_flame": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "export_audio": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "export_ts": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ],
+    "export_meta": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ]
+  },
+  "per_clip": {
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000": {
+      "stage12": {
+        "ok": true,
+        "T": 191,
+        "expression_shape": [
+          191,
+          100
+        ],
+        "head_pose_shape": [
+          191,
+          3
+        ],
+        "jaw_pose_shape": [
+          191,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.21398068964481354,
+        "jaw_abs_max_rad": 0.07259390503168106,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -1.9830628633499146,
+          "max": 2.37439227104187,
+          "mean": -0.02499581128358841,
+          "std": 0.4243529736995697
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          188,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.793006896972656,
+          "max": 3.1705029010772705,
+          "mean": -0.0019077841425314546,
+          "std": 0.24990029633045197
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          191,
+          112
+        ],
+        "audio_shape": [
+          191,
+          768
+        ],
+        "valid_length": 188,
+        "dropout": 3,
+        "audio_matched": 191,
+        "ts_range": [
+          0.2800000011920929,
+          7.960000038146973
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          191,
+          112
+        ],
+        "audio_shape": [
+          191,
+          768
+        ],
+        "timestamp_T": 191,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 3,
+        "audio_matched": 191,
+        "frame_index_range": [
+          7,
+          199
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.22454500198364258,
+        "jaw_abs_max_rad": 0.07289121299982071,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.4682226181030273,
+          "max": 2.2517571449279785,
+          "mean": -0.03374027833342552,
+          "std": 0.4488064646720886
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.2163848876953125,
+          "max": 2.936344861984253,
+          "mean": -0.0012108314549550414,
+          "std": 0.24744214117527008
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          4.0,
+          11.960000038146973
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          100,
+          299
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.24400541186332703,
+        "jaw_abs_max_rad": 0.07289121299982071,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.4682226181030273,
+          "max": 2.2517571449279785,
+          "mean": -0.039427611976861954,
+          "std": 0.4617307782173157
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.104661464691162,
+          "max": 3.1212384700775146,
+          "mean": -0.0013128932332620025,
+          "std": 0.2488955706357956
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          8.0,
+          15.960000038146973
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          200,
+          399
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.24400541186332703,
+        "jaw_abs_max_rad": 0.08605783432722092,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.5672152042388916,
+          "max": 1.8545572757720947,
+          "mean": -0.04098246246576309,
+          "std": 0.4586619734764099
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -3.405306577682495,
+          "max": 3.2254669666290283,
+          "mean": -0.0012693348107859492,
+          "std": 0.24795038998126984
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          12.0,
+          19.959999084472656
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          300,
+          499
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.233616441488266,
+        "jaw_abs_max_rad": 0.08605783432722092,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.5672152042388916,
+          "max": 1.9569172859191895,
+          "mean": -0.0392734557390213,
+          "std": 0.46162399649620056
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -3.966726541519165,
+          "max": 3.0385665893554688,
+          "mean": -0.0007772853714413941,
+          "std": 0.24502776563167572
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          16.0,
+          23.959999084472656
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          400,
+          599
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.32950350642204285,
+        "jaw_abs_max_rad": 0.06411392986774445,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.1568236351013184,
+          "max": 1.8435297012329102,
+          "mean": -0.03900277614593506,
+          "std": 0.45502781867980957
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.749563694000244,
+          "max": 3.160679578781128,
+          "mean": -0.0012516159331426024,
+          "std": 0.2468542754650116
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          30.68000030517578,
+          38.63999938964844
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          767,
+          966
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.23362353444099426,
+        "jaw_abs_max_rad": 0.06411392986774445,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.455038547515869,
+          "max": 1.9153679609298706,
+          "mean": -0.042412903159856796,
+          "std": 0.48326820135116577
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.69391393661499,
+          "max": 3.1744699478149414,
+          "mean": -0.0012890314683318138,
+          "std": 0.24456000328063965
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          34.68000030517578,
+          42.63999938964844
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          867,
+          1066
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.23748405277729034,
+        "jaw_abs_max_rad": 0.07329533994197845,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.455038547515869,
+          "max": 1.9153679609298706,
+          "mean": -0.03779515624046326,
+          "std": 0.49970903992652893
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.3986711502075195,
+          "max": 3.3046629428863525,
+          "mean": -0.0009570199181325734,
+          "std": 0.24672867357730865
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          38.68000030517578,
+          46.63999938964844
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          967,
+          1166
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.25113075971603394,
+        "jaw_abs_max_rad": 0.07329533994197845,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.2360613346099854,
+          "max": 2.0392467975616455,
+          "mean": -0.035554565489292145,
+          "std": 0.4840252697467804
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -3.5212109088897705,
+          "max": 2.9959120750427246,
+          "mean": -0.0013044916559010744,
+          "std": 0.24824543297290802
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          42.68000030517578,
+          50.63999938964844
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          1067,
+          1266
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.29123327136039734,
+        "jaw_abs_max_rad": 0.06957607716321945,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -2.2360613346099854,
+          "max": 2.0392467975616455,
+          "mean": -0.030090456828475,
+          "std": 0.456138014793396
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.702733039855957,
+          "max": 2.989504814147949,
+          "mean": -0.001342533971183002,
+          "std": 0.24877579510211945
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          46.68000030517578,
+          54.63999938964844
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          1167,
+          1366
+        ]
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005": {
+      "stage12": {
+        "ok": true,
+        "T": 200,
+        "expression_shape": [
+          200,
+          100
+        ],
+        "head_pose_shape": [
+          200,
+          3
+        ],
+        "jaw_pose_shape": [
+          200,
+          3
+        ],
+        "no_nan_inf": true,
+        "head_abs_max_rad": 0.29123327136039734,
+        "jaw_abs_max_rad": 0.06890611350536346,
+        "head_threshold_0_5": true,
+        "jaw_threshold_0_2": true,
+        "jaw_source": "spectre",
+        "jaw_vs_spectre_maxdiff": 0.0,
+        "jaw_equals_spectre": true,
+        "expr_stats": {
+          "min": -1.9655894041061401,
+          "max": 1.8724513053894043,
+          "mean": -0.02937103807926178,
+          "std": 0.42814722657203674
+        }
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "no_nan_inf": true,
+        "left_norm_mean": 1.0,
+        "left_norm_max_abs_dev": 5.960464477539063e-08,
+        "right_norm_mean": 1.0,
+        "right_norm_max_abs_dev": 5.960464477539063e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "no_nan_inf": true,
+        "stats": {
+          "min": -4.668890953063965,
+          "max": 3.3580100536346436,
+          "mean": -0.0010808404767885804,
+          "std": 0.24826380610466003
+        }
+      },
+      "stage17": {
+        "ok": true,
+        "visual_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "valid_length": 200,
+        "dropout": 0,
+        "audio_matched": 200,
+        "ts_range": [
+          50.68000030517578,
+          58.63999938964844
+        ]
+      },
+      "export": {
+        "ok": true,
+        "files_exist": {
+          "flame": true,
+          "audio": true,
+          "timestamp": true,
+          "metadata": true
+        },
+        "flame_shape": [
+          200,
+          112
+        ],
+        "audio_shape": [
+          200,
+          768
+        ],
+        "timestamp_T": 200,
+        "timestamp_monotonic": true,
+        "metadata_valid": true,
+        "metadata_sources": {
+          "head_source": "emica",
+          "jaw_source": "spectre",
+          "expression_source": "emica",
+          "gaze_source": "mediapipe",
+          "audio_source": "chinese_hubert"
+        },
+        "dropout": 0,
+        "audio_matched": 200,
+        "frame_index_range": [
+          1267,
+          1466
+        ]
+      }
+    }
+  },
+  "manifest_ids": [
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+  ]
+}

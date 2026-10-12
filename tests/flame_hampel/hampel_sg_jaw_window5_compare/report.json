@@ -1,0 +1,11 @@
+{
+    "hampel": {
+        "head_pose_changed": 1,
+        "jaw_pose_changed": 13
+    },
+    "sg": {
+        "window_length": 5,
+        "polyorder": 2
+    },
+    "processed": "head_pose(50:53)+jaw_pose(53:56)"
+}

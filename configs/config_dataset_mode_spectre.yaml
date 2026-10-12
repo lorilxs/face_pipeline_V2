@@ -1,0 +1,397 @@
+# Face_Pipeline_V2 Configuration Template
+# All Pipeline parameters MUST come from this file (AISDD 4.3.1)
+
+# Pipeline Mode Selection (AISDD orchestration-level switch).
+#   open_domain : full Stage0-17 pipeline with quality filtering
+#                 (Stage6/7/7.1/8/9) — DEFAULT, backward compatible.
+#   dataset     : existing high-quality datasets — skip quality stages,
+#                 chain = Stage0-5 -> Stage10 -> 11 -> 12 -> 13 -> 14 -> 17.
+pipeline_mode: dataset
+
+project:
+  project_name: Face_Pipeline_V2
+  version: v1.0
+  environment: development
+
+video:
+  target_fps: 25
+  audio_sample_rate: 16000
+  resolution: [256, 256]
+  codec: h264
+  # Stage 0: Video Integrity Check (AISDD 3.3.6)
+  check_video_stream: true
+  check_audio_stream: true
+  ffprobe_path: null  # auto-detect from PATH if null
+
+# Stage 0.5: Resolution Filter (AISDD 3.4) — video-level hard filter before FFmpeg
+stage_00_resolution_filter:
+  enabled: true
+  min_width: 512
+  min_height: 512
+
+scene:
+  detector: PySceneDetect
+  threshold: 0.5
+  min_scene_duration: 1.0
+
+# Stage 2: Scene Segmentation (AISDD 3.5.6)
+stage_02:
+  detector: ContentDetector
+  threshold: 27.0
+  min_scene_len: 15
+
+# Stage 3: Coarse Face Screening (AISDD 3.6)
+stage_03:
+  enabled: true
+  sampling_fps: 1
+  min_duration: 8
+  min_face_detect_ratio: 0.95
+  min_single_face_ratio: 0.95
+  min_face_confidence: 0.6
+
+  debug:
+    export_valid_scenes: false
+    output_dir: outputs/debug/stage_03_scenes
+
+# Stage 4: Temporal Clip Generation / Sliding Window (AISDD 3.7)
+stage_04:
+  enabled: true
+  mode: segment   # sliding_window | segment (default: sliding_window)
+  window_size: 8
+  stride: 4
+  target_fps: 25
+
+# Stage 5: Full Face Detection & Crop (AISDD 3.8)
+stage_05:
+  enabled: true
+  face_selection:
+    strategy: largest_area
+  crop:
+    enabled: true
+    size: 256                   # **deprecated** — crops saved at native resolution
+    boundary_check:
+      enabled: true
+      fallback_ratio: 1.5       # **deprecated**
+
+# Stage 5 Base Face Crop Asset generation (bbox expansion on original frame)
+# Expand happens at bbox level BEFORE cropping — ensures full face region
+# (forehead, chin, cheeks) is preserved in the raw crop.
+stage_05_face_crop:
+  expand_ratio: 2.0             # bbox expansion factor (2.0 = double width/height)
+  save_raw_crop: true           # save at native resolution, no resize
+  save_frames: false
+
+# Stage 5.1: Face Tracking Enhancement (AISDD 3.9.1)
+# Enable/disable via: enhancements.stage_05_1_face_tracking.enabled
+stage_05_1:
+  tracker:
+    type: bytetrack
+    # track_thresh / det_thresh 默认跟随 stage_03.detection_confidence_threshold
+    # (本文件 stage_03 未定义该项 -> 代码缺省 0.5)。改 stage_03 阈值时两处自动
+    # 同步；如需解耦，在此显式写数值覆盖。
+    track_buffer: 30
+    match_thresh: 0.8
+
+face:
+  model: SCRFD
+  confidence_threshold: 0.6
+  sampling_rate: 1
+
+# SCRFD ONNX execution provider (auto / ppu / cuda / cpu).
+#   auto -> prefer PPU/CUDA, fall back to CPU
+#   ppu  -> force PPU (CUDA-compatible PPU is reached via CUDA EP), fall back to CPU
+#   cpu  -> force CPU
+scrfd:
+  execution_provider: auto
+
+# Stage 6: Head Pose Estimation (AISDD 3.10)
+stage_06:
+  enabled: true
+  model_name: sixdrepnet
+  batch_size: 32
+  device: cuda
+  preprocess:
+    input_size: 256             # 6DRepNet input resolution (resize only, expand now in Stage5)
+
+# Stage 9 filtering thresholds (not used by Stage 6)
+pose:
+  model: 6DRepNet
+  yaw_threshold: 30.0
+  pitch_threshold: 20.0
+  roll_threshold: 30.0
+
+# Stage 7: A/V Sync Detection (AISDD 3.11)
+stage_07:
+  enabled: true
+  model_name: syncnet
+  checkpoint: models/syncnet/syncnet_v2.model
+  device: cpu
+  sample_rate: 16000
+  batch_size: 32
+  vshift: 10
+  preprocess:
+    # expand now done at Stage 5 bbox level (stage_05_face_crop.expand_ratio)
+    input_size: 256             # SyncNet face-crop video frame size
+
+# Stage 7.1: A/V Sync Correction (Audio Timeline Alignment)
+# Applies SyncNet offset to align audio with video.
+# Enabled by default — audio consistency is a fundamental requirement.
+# max correction range is derived from sync.max_offset_frames via FPS conversion.
+stage_07_1_av_alignment:
+  enabled: true
+  correction_threshold_ms: 50     # |offset| < 50ms: skip correction
+  output_dir: stage_outputs/av_alignment   # relative to storage.output_dir (intermediate)
+
+# Stage 7.1 → Stage 9.5 audio asset lifecycle management.
+# Stage 7.1 writes per-clip intermediate audio to
+# <output_dir>/stage_outputs/av_alignment/<clip_id>/ (raw + aligned wav, kept
+# for debugging). Stage 9.5 exports ONLY the aligned audio as the final
+# canonical asset audio/{clip_id}.wav; the raw clip audio is intentionally NOT
+# exported as a final asset.
+# cleanup_after_export:
+#   false -> keep Stage 7.1 intermediate audio (default, safest)
+#   true  -> Stage 9.5 automatically removes stage_outputs/av_alignment/<clip_id>/
+#            after a successful per-clip export (video + aligned audio copied),
+#            leaving only the final flat assets.  The final dirs clips/ and
+#            audio/ are protected and never deleted.
+audio_alignment:
+  cleanup_after_export: true
+
+# Stage 9.5: Clip Export — final training data assets (accepted clips only).
+stage_09_5:
+  clips_dir: clips              # final video clips: clips/{clip_id}.mp4
+  audio_dir: audio              # final canonical (aligned) audio: audio/{clip_id}.wav
+  manifest: manifest.json
+
+# Unified Audio-Visual Sync configuration.
+# Shared by Stage 7.1 (correction range).
+# Stage 9 hard filter uses quality.sync section (raw LSE-C + offset thresholds).
+# NOTE: max_offset_frames here (Stage 7.1 correction range) MUST align with
+#       quality.sync.max_offset_frames (Stage 9 acceptance range). Both = 8.
+sync:
+  model: SyncNet
+  max_offset_frames: 8            # Stage 7.1 max correction range = 320ms @25fps
+  correction_enable: true
+
+# Stage 8: Face Quality Assessment (AISDD 3.12)
+stage_08:
+  enabled: true
+  model_name: hyperiqa
+  checkpoint: models/HyperIQA/
+  device: cuda
+  batch_size: 32
+  preprocess:
+    input_size: 224             # HyperIQA input resolution (resize only, expand now in Stage5)
+
+# Stage 9 filtering thresholds (not used by Stage 8)
+quality:
+  model: HyperIQA
+  quality_threshold: 0.32        #hdtf视频的实际分布 median=0.47，0.4 能保留 ~90% 高质量 clip
+  batch_size: 32
+  # SyncNet hard filter — uses raw Stage 7 AVSyncInfo values (NOT normalized)
+  # offset: frame offset between audio and video
+  # lse_c: LSE-C = median(distance) - min(distance), typical range 3-10
+  sync:
+    enabled: true
+    max_offset_frames: 8          # |offset| <= 8 frames (320ms @25fps)
+    min_lse_c: 3.0                # LSE-C >= 5.0 for reliable sync     HDTF视频在4.9~6.3区间里（临时调3.0验证输出）
+
+# Stage 9: Quality Metrics Fusion & Hard Filtering (AISDD 3.13)
+# Hard filter gates (per-dimension, all must pass):
+#   - pose:  min_pose_ratio (config below)
+#   - sync:  quality.sync.max_offset_frames + quality.sync.min_lse_c (raw LSE-C)
+#   - quality: quality.quality_threshold
+# Fusion weights: used ONLY for Stage 9.1 Quality Ranking weighted score.
+#   sync weight here uses normalized sync_score (not raw LSE-C).
+stage_09:
+  enabled: true
+  min_pose_ratio: 0.85          # hard filter: min ratio of frames within pose thresholds，HDTF视频pose全维1.0
+  fusion_threshold: null       # optional overall fusion gate; null = disabled
+  fusion_weights:
+    pose: 0.4                  # Stage 9.1 ranking weight (not hard filter)
+    sync: 0.3                  # Stage 9.1 ranking weight — uses normalized sync_score
+    quality: 0.3               # Stage 9.1 ranking weight
+
+# Stage 9.1: Quality Ranking (Optional Enhancement)
+# Weighted multi-metric score fusion for sorting and tier assignment.
+# All parameters MUST come from this config — no hard-coding in Python.
+quality_ranking:
+  weights:
+    pose: 0.3
+    sync: 0.3
+    face_quality: 0.4
+  levels:
+    excellent: 0.85
+    good: 0.70
+    normal: 0.50
+
+# Stage 10: High-Precision Landmark Extraction (AISDD 3.14)
+landmark:
+  enabled: true
+  model_path: models/insightface/2d106det.onnx
+  device: auto
+
+# Stage 11: Face Alignment (AISDD 3.15)
+alignment:
+  enabled: true
+  output_size: 256                 # aligned face output resolution (square)
+  # resolution: 256                # legacy alias for output_size — kept for backward compat
+  save_aligned_faces: true
+  # Canonical alignment template — normalized 256×256 canvas coordinates.
+  #   template.eye_distance : eye-to-eye distance in px → controls canonical face size
+  #   template.eye_center_y : eye-line Y in px → controls vertical placement in canvas
+  #   scale_factor          : final_scale = original_scale * scale_factor.
+  #                           <1.0 shrinks the canonical face (fixes chin/forehead
+  #                           clipping); >1.0 enlarges it. Default 1.0 = current behavior.
+  # NOTE: defaults (80.541 / 118.0 / 1.0) reproduce the pre-config template exactly.
+  template:
+    eye_distance: 80.541
+    eye_center_y: 127.0
+  scale_factor: 0.77
+  # output_dir is DEPRECATED — aligned faces now write to storage.output_dir/aligned_faces
+  output_dir: outputs/aligned_faces  # deprecated, ignored
+
+flame:
+  model: EMICA
+  device: cuda:0
+  expression_dim: 100
+  pose_dim: 6
+
+# Stage 12: FLAME Parameter Extraction (EMICA + SPECTRE, AISDD 3.16)
+stage12:
+  enabled: true
+  runtime_mode: subprocess        # "subprocess" (Docker) | "direct" (in-process)
+  emica:
+    enabled: true
+    checkpoint: models/EMICA/EMICA-CVT_flame2020_notexture/checkpoints/model-epoch=38-val/loss_total=3.88806534.ckpt
+  spectre:
+    enabled: true
+    checkpoint: third_party/inferno/spectre/spectre/data/spectre_model.tar
+  # Production default (Experiment A): all three sources = EMICA (FLAME mesh
+  # validated). SPECTRE raw jaw is kept as spectre_jawpose debug field.
+  # To run Experiment B (all SPECTRE), use configs/config_dataset_mode_spectre.yaml
+  # or set the three *_source fields to "spectre". Mixed source is FORBIDDEN
+  # (known to distort mouth mesh / break parameter-space consistency).
+  expression_source: spectre
+  head_source: spectre
+  jaw_source: spectre
+  jaw_fusion_lambda:
+    deprecated: true
+    reason: "jaw source switched to EMICA (FLAME mesh validated)"
+    legacy_default: 1.0
+  batch_size: 8
+  device: cuda                    # device for subprocess inference
+  subprocess_timeout: 3600        # timeout in seconds
+  output_dir: outputs/stage12_flame
+
+gaze:
+  model: MediaPipe
+  output_dim: 6
+
+# Stage 13: Gaze Parameter Extraction (MediaPipe, AISDD 3.17)
+stage13:
+  enabled: true
+  gaze:
+    enabled: true
+    model_path: models/mediapipe/face_landmarker.task
+    delegate: cpu          # cpu | gpu
+    batch_size: 8          # for future batching
+    image_size: [256, 256] # aligned face size
+  output_dir: outputs/stage13_gaze
+
+audio:
+  backend: hubert
+  # HuggingFace-format HuBERT directory (config.json + pytorch_model.bin).
+  # The fairseq checkpoint models/hubert/hubert_base_ls960.pt is NOT usable
+  # on Python 3.12 (fairseq dataclass crash); Stage 14 loads via transformers.
+  model_path: models/hubert/chinese-hubert-base
+  sample_rate: 16000
+  feature_dim: 768
+
+# Stage 14: Audio Feature Extraction (AISDD 3.20) — HuBERT
+stage_14:
+  enabled: true
+  model_path: models/hubert/chinese-hubert-base   # overrides audio.model_path if set
+  device: auto               # auto / cpu / cuda
+  fps: 25                    # feature alignment target (video frame rate)
+  output_dir: outputs/stage14_audio
+
+# Stage 17: Training Sample Assembly (AISDD 3.23) — Parameter Alignment & Fusion
+# 三模态 (Stage12 FLAME / Stage13 Gaze / Stage14 Audio) 按统一时间轴对齐,
+# 装配为 clip-level TrainingSample 样本包 (见 docs/Stage17_Design_Review.md §4)。
+stage17:
+  enabled: true
+  output_dir: outputs/stage17_fusion
+  fps: 25                    # 视频帧率 (写入 metadata, 时间网格由 FLAME.timestamp 承载)
+  visual_dim: 112
+  audio_dim: 768
+  audio_match: nearest_timestamp
+  audio_tolerance: 0.04      # audio nearest 匹配容差 (秒, 与设计文档 40ms 边界一致)
+
+# Stage 1: AV Standardization (AISDD 3.4.6)
+stage_01:
+  target_fps: 25
+  audio_sample_rate: 16000
+  video_codec: libx264
+  audio_codec: pcm_s16le
+  ffmpeg_path: null  # auto-detect from PATH if null
+  output_dir: outputs/videos
+
+models:
+  scrfd:
+    path: models/SCRFD
+    device: cuda
+    execution_provider: auto   # auto / ppu / cuda / cpu
+  sixdrepnet:
+    path: models/6DRepNet
+    device: auto
+  syncnet:
+    path: models/syncnet/syncnet_v2.model
+    device: auto
+  hyperiqa:
+    path: models/HyperIQA
+    device: auto
+    resnet50_path: models/HyperIQA/resnet50-19c8e357.pth
+  insightface_landmark:
+    path: models/insightface/2d106det.onnx
+    device: auto
+
+runtime:
+  device: auto
+  backend: ppu
+  video_reader: ffmpeg          # ffmpeg | opencv — frame reader backend
+  num_workers: 4
+  batch_size: 32
+  enable_parallel: true
+
+# Enhancement Module Control (AISDD 3.9)
+# Professional talking-face data: disable all enhancements.
+# Open-domain (vlog, social-media, multi-person) data: enable as needed.
+enhancements:
+  stage_05_1_face_tracking:
+    enabled: false       #false
+  stage_05_2_single_face_filter:
+    enabled: false
+    max_identity_anomaly_ratio: 0.005
+  stage_05_3_temporal_stability:
+    enabled: false
+    max_center_motion: 15.0
+    max_scale_change_ratio: 0.25
+    max_stability_anomaly_ratio: 0.05
+  stage_09_1_quality_ranking:
+    enabled: false
+
+storage:
+  input_dir: data/input
+  output_dir: outputs
+  model_dir: models
+  log_dir: outputs/logs
+
+# Real model validation (AISDD validation tools)
+validation:
+  output_dir: outputs/validation
+  save_json: true
+  save_report: true
+  visualization:
+    enabled: true
+    sample_count: 10

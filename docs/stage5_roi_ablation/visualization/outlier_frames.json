@@ -1,0 +1,50 @@
+{
+ "baseline": [
+  {
+   "frame": 7,
+   "distance": 9.46
+  },
+  {
+   "frame": 9,
+   "distance": 14.03
+  },
+  {
+   "frame": 23,
+   "distance": 9.76
+  },
+  {
+   "frame": 28,
+   "distance": 9.63
+  },
+  {
+   "frame": 35,
+   "distance": 8.88
+  },
+  {
+   "frame": 40,
+   "distance": 10.95
+  },
+  {
+   "frame": 42,
+   "distance": 11.36
+  },
+  {
+   "frame": 129,
+   "distance": 10.02
+  }
+ ],
+ "roi": [
+  {
+   "frame": 7,
+   "distance": 8.31
+  },
+  {
+   "frame": 22,
+   "distance": 8.65
+  },
+  {
+   "frame": 170,
+   "distance": 8.36
+  }
+ ]
+}

@@ -1,0 +1,948 @@
+{
+  "Stage 5": {
+    "status": "PASS",
+    "summary": "11 sequence(s), 2192 face detections"
+  },
+  "Stage 10": {
+    "status": "PASS",
+    "summary": "2192 landmark(s)"
+  },
+  "Stage 11": {
+    "status": "PASS",
+    "summary": "2192 aligned face(s) | exported 11 clip metadata"
+  },
+  "skipped_in_dataset_mode": [
+    "Stage 6 (6DRepNet pose)",
+    "Stage 7 (SyncNet A/V sync)",
+    "Stage 7.1 (A/V alignment)",
+    "Stage 8 (HyperIQA quality)",
+    "Stage 9 (Quality fusion/filter)",
+    "Stage 9.5 (Clip export)"
+  ],
+  "clips": {
+    "count": 11,
+    "ids": [
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004",
+      "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005"
+    ]
+  },
+  "per_clip": {
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000": {
+      "aligned_frames": 192,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          192,
+          100
+        ],
+        "head_pose": [
+          192,
+          3
+        ],
+        "jaw_pose": [
+          192,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.07211224734783173,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          190,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142135381698608,
+        "norm_std": 2.288138567507758e-08
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0000.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          192,
+          112
+        ],
+        "audio": [
+          192,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          0.2800000011920929,
+          7.960000038146973
+        ],
+        "valid_length": 190,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.010416666666666666
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 190,
+        "gaze_dropout_rows": 2,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.07146408408880234,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3161601347965188e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          4.0,
+          11.960000038146973
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.07147703319787979,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3023137885047618e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0002.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          8.0,
+          15.960000038146973
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.08282961696386337,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3161601347965188e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0003.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          12.0,
+          19.959999084472656
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.08282961696386337,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3253451786331425e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0004.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          16.0,
+          23.959999084472656
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.06436450779438019,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3100164980860427e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0000.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          30.68000030517578,
+          38.63999938964844
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.06436450779438019,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3375358182420314e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0001.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          34.68000030517578,
+          42.63999938964844
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.07134664058685303,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.35721117292087e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0002.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          38.68000030517578,
+          46.63999938964844
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.07134664058685303,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3375358182420314e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0003.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          42.68000030517578,
+          50.63999938964844
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.06814220547676086,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.340573530545953e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0004.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          46.68000030517578,
+          54.63999938964844
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    },
+    "CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005": {
+      "aligned_frames": 200,
+      "aligned_resolution": [
+        [
+          256,
+          256
+        ]
+      ],
+      "stage12": {
+        "ok": true,
+        "expression": [
+          200,
+          100
+        ],
+        "head_pose": [
+          200,
+          3
+        ],
+        "jaw_pose": [
+          200,
+          3
+        ],
+        "finite": true,
+        "jaw_max_abs_rad": 0.06812557578086853,
+        "jaw_lt_1rad": true
+      },
+      "stage13": {
+        "ok": true,
+        "shape": [
+          200,
+          6
+        ],
+        "finite": true,
+        "norm_mean": 1.4142132997512817,
+        "norm_std": 2.3466371601443825e-07
+      },
+      "stage14": {
+        "ok": true,
+        "shape": [
+          200,
+          768
+        ],
+        "finite": true,
+        "dimension": 768,
+        "alignment_status": "already_aligned",
+        "offset_frames": 0,
+        "metadata_audio_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005.wav",
+        "metadata_audio_exists": true,
+        "source_audio_in_npz": "outputs/stage0_17_e2e/dataset_validation/stage_outputs/av_alignment/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005/CNFACE_00001_BV18Qg96YE1W_000000_scene_0002_clip_0005.wav",
+        "uses_fallback_wav": true
+      },
+      "stage17": {
+        "ok": true,
+        "visual": [
+          200,
+          112
+        ],
+        "audio": [
+          200,
+          768
+        ],
+        "visual_dim112": true,
+        "audio_dim768": true,
+        "timestamps_monotonic": true,
+        "timestamps_range": [
+          50.68000030517578,
+          58.63999938964844
+        ],
+        "valid_length": 200,
+        "audio_match_idx_frac": 1.0,
+        "dropout_frac": 0.0
+      },
+      "stage17_crosscheck": {
+        "expr_maxdiff": 0.0,
+        "head_maxdiff": 0.0,
+        "jaw_maxdiff": 0.0,
+        "gaze_maxdiff_nearest_ts": 0.0,
+        "gaze_rows_matched": 200,
+        "gaze_dropout_rows": 0,
+        "layout_match": true
+      }
+    }
+  },
+  "summary": {
+    "clips_total": 11,
+    "clips_all_stages_ok": 11,
+    "clips_layout_match": 11,
+    "overall": "PASS"
+  }
+}

@@ -1,0 +1,100 @@
+# =====================================================================
+# .gitignore — Face_Pipeline_V2
+# 目的：只上传「代码 / 文档 / 配置 / 测试」，排除所有大数据与人工产物。
+# 本项目包含 ~4TB 数据（videos 1.1T / outputs 2.7T / logs 11G / models 7G 等），
+# 这些绝不能上传到 GitHub（单文件上限 100MB、仓库建议 <1GB）。
+# =====================================================================
+
+# ---------- Python 运行时 & 构建产物 ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+
+# ---------- 虚拟环境 ----------
+.venv/
+venv/
+env/
+ENV/
+
+# ---------- IDE / 编辑器 ----------
+.vscode/
+.idea/
+.claude/
+*.swp
+*.swo
+*~
+
+# ---------- 操作系统 ----------
+.DS_Store
+Thumbs.db
+
+# ---------- 日志 / 临时文件 ----------
+*.log
+nohup.out
+*.tmp
+*.bak
+
+# ---------- 音视频 / 图像 / 数组（管线输入输出的原始数据） ----------
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.flv
+*.wmv
+*.m4v
+*.webm
+*.wav
+*.mp3
+*.flac
+*.aac
+*.npy
+*.npz
+
+# ---------- 模型权重 / 大体积二进制 ----------
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.bin
+*.pkl
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.whl
+*.7z
+*.rar
+
+# ---------- 项目根目录下的大型数据 / 模型 / 产物目录 ----------
+/models/
+/videos/
+/logs/
+/outputs/
+/test_data/
+/third_party/
+/old_wheels/
+
+# ---------- 根目录下的大文件 ----------
+/hubert_audio_extraction_package.tar.gz
+/lo
+/face_pipeline_v2.tar.gz
+/docker_pycreds-0.4.0-py2.py3-none-any.whl
+
+# ---------- 脚本目录下的生成产物 ----------
+/scripts/stage5_stage10_audit/_sync_probe/
+/scripts/stage5_stage10_audit/rerun_run_*.log
+/scripts/stage5_stage10_audit/_deleted_no_export_dirs_*.txt
+/scripts/stage5_stage10_audit/fail_videos_list_*.txt

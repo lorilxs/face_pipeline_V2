@@ -1,0 +1,115 @@
+{
+ "experiment": "stage5_scrfd_temporal_roi_ablation",
+ "outlier_px_threshold": 8.0,
+ "baseline": {
+  "bbox_center_jitter_mean": 2.2653,
+  "bbox_center_jitter_std": 2.2389,
+  "bbox_max_jump": 14.0307,
+  "width_change_mean": 2.6046,
+  "height_change_mean": 2.9785,
+  "outlier_count": 8,
+  "outlier_frames": [
+   7,
+   9,
+   23,
+   28,
+   35,
+   40,
+   42,
+   129
+  ],
+  "landmark_jitter_mean": 1.7524,
+  "landmark_jitter_std": 0.8162,
+  "landmark_max_jump": 16.8229,
+  "landmark_outlier_count": 2,
+  "landmark_outlier_frames": [
+   40,
+   128
+  ]
+ },
+ "roi": {
+  "bbox_center_jitter_mean": 2.7596,
+  "bbox_center_jitter_std": 1.7424,
+  "bbox_max_jump": 8.6466,
+  "width_change_mean": 0.979,
+  "height_change_mean": 5.682,
+  "outlier_count": 3,
+  "outlier_frames": [
+   7,
+   22,
+   170
+  ],
+  "landmark_jitter_mean": 1.7972,
+  "landmark_jitter_std": 0.7198,
+  "landmark_max_jump": 16.807,
+  "landmark_outlier_count": 2,
+  "landmark_outlier_frames": [
+   154,
+   170
+  ]
+ },
+ "difference_pct": {
+  "bbox_center_jitter_mean": 21.8203,
+  "bbox_max_jump": -38.3739,
+  "outlier_count": -62.5,
+  "landmark_jitter_mean": 2.5589,
+  "landmark_max_jump": -0.0946
+ },
+ "sweep": {
+  "1.0": {
+   "bbox_center_jitter_mean": 1.7493,
+   "bbox_center_jitter_std": 1.0747,
+   "bbox_max_jump": 5.239,
+   "landmark_jitter_mean": 1.7357,
+   "landmark_max_jump": 14.9325,
+   "full_image_count": 1
+  },
+  "1.2": {
+   "bbox_center_jitter_mean": 2.7596,
+   "bbox_center_jitter_std": 1.7424,
+   "bbox_max_jump": 8.6466,
+   "landmark_jitter_mean": 1.7972,
+   "landmark_max_jump": 16.807,
+   "full_image_count": 1
+  },
+  "1.5": {
+   "bbox_center_jitter_mean": 1.9356,
+   "bbox_center_jitter_std": 1.2786,
+   "bbox_max_jump": 7.0285,
+   "landmark_jitter_mean": 1.7445,
+   "landmark_max_jump": 15.5165,
+   "full_image_count": 1
+  },
+  "2.0": {
+   "bbox_center_jitter_mean": 1.8515,
+   "bbox_center_jitter_std": 1.1441,
+   "bbox_max_jump": 6.5015,
+   "landmark_jitter_mean": 1.7366,
+   "landmark_max_jump": 14.1214,
+   "full_image_count": 1
+  }
+ },
+ "fallback": {
+  "count": 0,
+  "rate": 0.0,
+  "frames": []
+ },
+ "conclusion": {
+  "roi_effectiveness": false,
+  "roi_improve": false,
+  "recommended_ratio": 1.0,
+  "fallback_rate": 0.0,
+  "production_candidate": "有条件推荐：默认 1.2 未改善平均抖动；但扫描中较小比例 1.0 将 bbox 抖动降至 1.749（低于基线 2.265），需更多数据验证 landmark 稳定性后再决定",
+  "production_recommendation": "有条件推荐：默认 1.2 未改善平均抖动；但扫描中较小比例 1.0 将 bbox 抖动降至 1.749（低于基线 2.265），需更多数据验证 landmark 稳定性后再决定"
+ },
+ "source": {
+  "video_path": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/outputs/stage0_17_e2e/stage0_11/clips/CNFACE_00001_BV18Qg96YE1W_000000_scene_0000_clip_0001.mp4",
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "frame_count": 200,
+  "scrfd_model": "/mnt/home/lxs/face_pipeline/Face_Pipeline_V2/models/SCRFD/scrfd_10g_bnkps.onnx",
+  "confidence_threshold": 0.6,
+  "expand_ratio": 2.0
+ }
+}

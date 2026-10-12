@@ -1,0 +1,15 @@
+{
+ "video": "test_data/1_8s.mp4",
+ "n_frames": 200,
+ "mean_cx": 338.1623,
+ "mean_cy": 438.5477,
+ "std_cx": 0.0278,
+ "std_cy": 0.0646,
+ "frame_to_frame_delta_cx_mean": 0.0234,
+ "frame_to_frame_delta_cy_mean": 0.0413,
+ "max_jump": 0.2385,
+ "max_jump_frame": 12,
+ "anomaly_threshold_px": 5.0,
+ "anomaly_frames": [],
+ "n_anomaly_frames": 0
+}

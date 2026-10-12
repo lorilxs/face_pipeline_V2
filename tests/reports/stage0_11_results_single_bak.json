@@ -1,0 +1,184 @@
+{
+  "final_status": "PARTIAL",
+  "generated_at": "2026-08-19T15:39:07Z",
+  "input_video": "test_data/BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_seg_m003.mp4",
+  "config": "/workspace/Face_Pipeline_V2/outputs/tmp/config_relaxed_stage3.yaml",
+  "test_base": "outputs/stage0_11_hardfilter_suzy_m003",
+  "stages": [
+    {
+      "stage": "Stage 0 (FFprobe integrity check)",
+      "status": "PASS",
+      "started": "2026-08-19T15:38:34Z",
+      "elapsed_s": 0.95,
+      "output_summary": "id=BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_seg_m003 | 1920x1080 | 25.00fps | 36.9s | 923 frames | audio=True",
+      "error": null,
+      "finished": "2026-08-19T15:38:35Z"
+    },
+    {
+      "stage": "Stage 0.5 (Resolution filter)",
+      "status": "PASS",
+      "started": "2026-08-19T15:38:35Z",
+      "elapsed_s": 0.0,
+      "output_summary": "1920x1080 vs min 534x534 | is_valid=True | reject=None",
+      "error": null,
+      "finished": "2026-08-19T15:38:35Z"
+    },
+    {
+      "stage": "Stage 1 (FFmpeg standardization)",
+      "status": "PASS",
+      "started": "2026-08-19T15:38:35Z",
+      "elapsed_s": 6.85,
+      "output_summary": "std_video=outputs/stage0_11_hardfilter_suzy_m003/videos/BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_seg_m003/BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_seg_m003_std.mp4 | audio=outputs/stage0_11_hardfilter_suzy_m003/videos/BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_seg_m003/BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_seg_m003_audio.wav",
+      "error": null,
+      "finished": "2026-08-19T15:38:42Z"
+    },
+    {
+      "stage": "Stage 2 (PySceneDetect)",
+      "status": "PASS",
+      "started": "2026-08-19T15:38:42Z",
+      "elapsed_s": 3.13,
+      "output_summary": "2 scene(s)",
+      "error": null,
+      "finished": "2026-08-19T15:38:45Z"
+    },
+    {
+      "stage": "Stage 3 (SCRFD coarse screening)",
+      "status": "PASS",
+      "started": "2026-08-19T15:38:45Z",
+      "elapsed_s": 5.64,
+      "output_summary": "2 scene(s): 1 passed, 1 rejected",
+      "error": null,
+      "finished": "2026-08-19T15:38:50Z"
+    },
+    {
+      "stage": "Stage 4 (Sliding-window clips)",
+      "status": "PASS",
+      "started": "2026-08-19T15:38:50Z",
+      "elapsed_s": 0.0,
+      "output_summary": "7 clip(s)",
+      "error": null,
+      "finished": "2026-08-19T15:38:51Z"
+    },
+    {
+      "stage": "Stage 5 (SCRFD detect/crop)",
+      "status": "PASS",
+      "started": "2026-08-19T15:38:51Z",
+      "elapsed_s": 14.09,
+      "output_summary": "7 sequence(s), 495 face detections",
+      "error": null,
+      "finished": "2026-08-19T15:39:05Z"
+    },
+    {
+      "stage": "Stage 5.1 (ByteTrack face tracking)",
+      "status": "PASS",
+      "started": "2026-08-19T15:39:05Z",
+      "elapsed_s": 2.82,
+      "output_summary": "7 sequence(s), 3 unique track(s)",
+      "error": null,
+      "finished": "2026-08-19T15:39:07Z"
+    },
+    {
+      "stage": "Stage 5.2 (Single-face filter)",
+      "status": "PASS",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "7 input: 0 passed, 7 rejected (hard filter, dropped)",
+      "error": null,
+      "finished": "2026-08-19T15:39:07Z"
+    },
+    {
+      "stage": "Stage 5.3 (Temporal stability)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 6 (6DRepNet pose)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 7 (SyncNet A/V sync)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 7.1 (A/V alignment)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 8 (HyperIQA quality)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 9 (Quality fusion/filter)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 9.5 (Clip export)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 10 (InsightFace landmark)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    },
+    {
+      "stage": "Stage 11 (Affine alignment)",
+      "status": "SKIPPED",
+      "started": "2026-08-19T15:39:07Z",
+      "elapsed_s": 0.0,
+      "output_summary": "",
+      "error": null,
+      "skip_reason": "Stage 5.2 produced no sequences"
+    }
+  ],
+  "video_info": {
+    "video_id": "BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_BV1LE411L729_Suzy_攻气单眼皮_衣冠楚楚_斯文败类_seg_m003",
+    "width": 1920,
+    "height": 1080,
+    "fps": 25.0,
+    "total_frames": 923,
+    "duration": 36.9,
+    "has_audio": true
+  },
+  "resolution_min": {
+    "width": 534,
+    "height": 534
+  }
+}

@@ -1,0 +1,84 @@
+{
+ "baseline": {
+  "center_jitter_mean": 2.265275302837927,
+  "center_jitter_std": 2.2388577148015507,
+  "max_jump": 14.030690146425437,
+  "width_jitter": 2.6045698492462432,
+  "height_jitter": 2.9785336683417096,
+  "outlier_count": 8,
+  "outlier_frames": [
+   7,
+   9,
+   23,
+   28,
+   35,
+   40,
+   42,
+   129
+  ],
+  "landmark_jitter_mean": 1.7523826518984746,
+  "landmark_max_jump": 4.601424369287491,
+  "landmark_outlier_count": 2
+ },
+ "ema_05": {
+  "center_jitter_mean": 1.6073817276359381,
+  "center_jitter_std": 1.2355401390029108,
+  "max_jump": 6.029101818922929,
+  "width_jitter": 1.6774922786464754,
+  "height_jitter": 1.6276353604155525,
+  "outlier_count": 0,
+  "outlier_frames": [],
+  "landmark_jitter_mean": 1.706548446615924,
+  "landmark_max_jump": 3.9388661034133317,
+  "landmark_outlier_count": 0
+ },
+ "ema_07": {
+  "center_jitter_mean": 1.9158884794386055,
+  "center_jitter_std": 1.6413565583375003,
+  "max_jump": 9.502396305513356,
+  "width_jitter": 2.0697460116584945,
+  "height_jitter": 2.1212622131146777,
+  "outlier_count": 1,
+  "outlier_frames": [
+   9
+  ],
+  "landmark_jitter_mean": 1.7114252282938347,
+  "landmark_max_jump": 4.509665562209285,
+  "landmark_outlier_count": 2
+ },
+ "ema_09": {
+  "center_jitter_mean": 2.154604161677854,
+  "center_jitter_std": 2.039217518029,
+  "max_jump": 12.682866465662336,
+  "width_jitter": 2.4094963209172797,
+  "height_jitter": 2.668472231049828,
+  "outlier_count": 8,
+  "outlier_frames": [
+   7,
+   9,
+   23,
+   28,
+   35,
+   40,
+   42,
+   129
+  ],
+  "landmark_jitter_mean": 1.722633737514003,
+  "landmark_max_jump": 4.20795702660605,
+  "landmark_outlier_count": 2
+ },
+ "conclusion": {
+  "best_alpha": 0.5,
+  "jitter_reduce": 0.2904254394058783,
+  "jitter_reduce_pct": 29.042543940587827,
+  "landmark_improve": true,
+  "landmark_delta_px": -0.045834205282550666,
+  "production_candidate": "推荐：EMA 显著降低 bbox 抖动且 landmark 同步改善，可进入 Stage5 候选验证"
+ },
+ "_order": [
+  "baseline",
+  "ema_05",
+  "ema_07",
+  "ema_09"
+ ]
+}

@@ -1,0 +1,30 @@
+{
+    "head_pose": {
+        "range": "50:53",
+        "changed_count": 1,
+        "changed_frames": [
+            49
+        ],
+        "ratio": 0.005
+    },
+    "jaw_pose": {
+        "range": "53:56",
+        "changed_count": 13,
+        "changed_frames": [
+            40,
+            48,
+            49,
+            55,
+            63,
+            70,
+            71,
+            73,
+            98,
+            99,
+            108,
+            158,
+            181
+        ],
+        "ratio": 0.065
+    }
+}
